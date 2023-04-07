@@ -7,4 +7,6 @@ pandas>=1.3.3
 sentencepiece>=0.1.97
 sacrebleu>=2.3.1
 rouge-score>=0.1.2
-sacremoses
+sacremoses==0.0.53
+accelerate==0.18.0
+bitsandbyte==0.37.2
