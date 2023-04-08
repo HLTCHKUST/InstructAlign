@@ -9,4 +9,4 @@ sacrebleu>=2.3.1
 rouge-score>=0.1.2
 sacremoses==0.0.53
 accelerate==0.18.0
-bitsandbyte==0.37.2
+bitsandbytes==0.37.2
