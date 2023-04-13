@@ -23,6 +23,7 @@ import os
 import sys
 from dataclasses import dataclass, field
 from typing import Optional
+import random
 
 import numpy as np
 import pandas as pd
@@ -49,7 +50,7 @@ from transformers.utils.versions import require_version
 import datasets
 
 from data_utils import load_flores_datasets
-from augmentation_util import do_augment
+from augmentation_utils import do_augment
 from prompt_utils import prompt_monolingual, prompt_translation, prompt_bilingual
 
 logger = logging.getLogger(__name__)
@@ -102,17 +103,6 @@ class DataTrainingArguments:
     dataset_config_name: Optional[str] = field(
         default=None, metadata={"help": "The configuration name of the dataset to use (via the datasets library)."}
     )
-    train_file: Optional[str] = field(default=None, metadata={"help": "The input training data file (a jsonlines)."})
-    validation_file: Optional[str] = field(
-        default=None,
-        metadata={
-            "help": "An optional input evaluation data file to evaluate the metrics (sacrebleu) on a jsonlines file."
-        },
-    )
-    test_file: Optional[str] = field(
-        default=None,
-        metadata={"help": "An optional input test data file to evaluate the metrics (sacrebleu) on a jsonlines file."},
-    )
     overwrite_cache: bool = field(
         default=False, metadata={"help": "Overwrite the cached training and evaluation sets"}
     )
@@ -161,16 +151,6 @@ class DataTrainingArguments:
         default=True,
         metadata={
             "help": "Whether to ignore the tokens corresponding to padded labels in the loss computation or not."
-        },
-    )
-    forced_bos_token: Optional[str] = field(
-        default=None,
-        metadata={
-            "help": (
-                "The token to force as the first generated token after the :obj:`decoder_start_token_id`.Useful for"
-                " multilingual models like :doc:`mBART <../model_doc/mbart>` where the first generated token needs to"
-                " be the target language token.(Usually it is the target language token)"
-            )
         },
     )
     augmentation_type: str = field(
@@ -263,6 +243,8 @@ def main():
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
+            device_map='auto',
+            load_in_8bit=True
         )
     else:
         model = AutoModelForCausalLM.from_pretrained(
@@ -272,6 +254,8 @@ def main():
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
+            device_map='auto',
+            load_in_8bit=True
         )
 
     # Preprocessing the datasets.
@@ -279,13 +263,11 @@ def main():
     column_names = raw_datasets["train"].column_names            
         
     def self_prompt(sent1, sent2, lang1, lang2, is_encoder_decoder, augmentation_type):
-        # Map language code to language name
-        language_map = {
-            
-        }
         # Random Choice
         if augmentation_type == 'random':
             augmentation_type = random.choice(['monolingual', 'translation', 'bilingual'])
+        elif augmentation_type == 'pair':
+            augmentation_type = random.choice(['translation', 'bilingual'])
             
         if augmentation_type == 'monolingual':
             rand_proba = random.random()            
@@ -312,7 +294,7 @@ def main():
                 src_text = do_augment(src_text, aug)            
             
             # Apply monolingual prompting
-            (input_text, output_text) = prompt_monolingual(src_text, tgt_text, is_encoder_decoder)
+            (input_text, output_text) = prompt_monolingual(src_text, tgt_text, lang1, is_encoder_decoder)
 
         elif augmentation_type == 'translation':
             # Apply translation prompting
@@ -355,7 +337,7 @@ def main():
         lang1 = [ex for ex in examples["lang1"]]
         lang2 = [ex for ex in examples["lang2"]]
                    
-        # TODO: Build Prompt
+        # Build Prompt
         input_data = []
         for s1, s2, l1, l2 in zip(sent1, sent2, lang1, lang2):
             input_data.append(self_prompt(s1, s2, l1, l2, is_encoder_decoder, augmentation_type))
@@ -430,55 +412,15 @@ def main():
         trainer.save_metrics("train", metrics)
         trainer.save_state()
 
-    # Evaluation
-    results = {}
-    num_beams = data_args.num_beams
-    if training_args.do_eval:
-        logger.info("*** Evaluate ***")
-
-        metrics = trainer.evaluate(max_length=data_args.max_target_length, num_beams=num_beams, metric_key_prefix="eval")
-        metrics["eval_samples"] = len(eval_dataset)
-
-        trainer.log_metrics("eval", metrics)
-        trainer.save_metrics("eval", metrics)
-
-    if training_args.do_predict:
-        logger.info("*** Predict ***")
-
-        predict_results = trainer.predict(
-            predict_dataset, metric_key_prefix="predict", max_length=max_length, num_beams=num_beams
-        )
-        metrics = predict_results.metrics
-        metrics["predict_samples"] = len(predict_dataset)
-
-        trainer.log_metrics("predict", metrics)
-        trainer.save_metrics("predict", metrics)
-
-        if trainer.is_world_process_zero():
-            if training_args.predict_with_generate:
-                predictions = tokenizer.batch_decode(
-                    predict_results.predictions, skip_special_tokens=True, clean_up_tokenization_spaces=True
-                )
-                predictions = [pred.strip() for pred in predictions]
-                output_prediction_file = os.path.join(training_args.output_dir, "generated_predictions.txt")
-                with open(output_prediction_file, "w", encoding="utf-8") as writer:
-                    writer.write("\n".join(predictions))
-
-    kwargs = {"finetuned_from": model_args.model_name_or_path, "tasks": "translation"}
+    kwargs = {"finetuned_from": model_args.model_name_or_path, "tasks": "instruction-tuning"}
     if data_args.dataset_name is not None:
         kwargs["dataset_tags"] = data_args.dataset_name
-        if data_args.dataset_config_name is not None:
-            kwargs["dataset_args"] = data_args.dataset_config_name
-            kwargs["dataset"] = f"{data_args.dataset_name} {data_args.dataset_config_name}"
-        else:
-            kwargs["dataset"] = data_args.dataset_name
+        kwargs["dataset"] = data_args.dataset_name
 
     if training_args.push_to_hub:
         trainer.push_to_hub(**kwargs)
     else:
         trainer.create_model_card(**kwargs)
-
-    return results
 
 if __name__ == "__main__":
     main()

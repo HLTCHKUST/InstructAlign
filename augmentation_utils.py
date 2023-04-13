@@ -1,5 +1,6 @@
 from nltk import word_tokenize
-import random    
+import random
+import numpy as np
 
 def random_infilling(text, replacement='___', prob=0.2):
     tokens = word_tokenize(text)
