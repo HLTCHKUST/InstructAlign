@@ -1,7 +1,6 @@
-CUDA_VISIBLE_DEVICES=2 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
-    --fp16 \
     --num_train_epochs 5 \
     --logging_strategy steps \
     --logging_steps 10 \
@@ -11,19 +10,17 @@ CUDA_VISIBLE_DEVICES=2 python run_t2t_finetuning.py \
     --save_steps 1 \
     --save_total_limit 5 \
     --output_dir ./save/monolingual/bloomz-560m \
-    --max_steps 10 \
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size=4 \
-    --per_device_eval_batch_size=4 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 4 \
     --overwrite_output_dir \
     --augmentation_type monolingual
 
-CUDA_VISIBLE_DEVICES=2 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
-    --fp16 \
     --num_train_epochs 5 \
     --logging_strategy steps \
     --logging_steps 10 \
@@ -33,19 +30,17 @@ CUDA_VISIBLE_DEVICES=2 python run_t2t_finetuning.py \
     --save_steps 1 \
     --save_total_limit 5 \
     --output_dir ./save/translation/bloomz-560m \
-    --max_steps 10 \
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size=4 \
-    --per_device_eval_batch_size=4 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 4 \
     --overwrite_output_dir \
     --augmentation_type translation
 
-CUDA_VISIBLE_DEVICES=2 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
-    --fp16 \
     --num_train_epochs 5 \
     --logging_strategy steps \
     --logging_steps 10 \
@@ -55,11 +50,10 @@ CUDA_VISIBLE_DEVICES=2 python run_t2t_finetuning.py \
     --save_steps 1 \
     --save_total_limit 5 \
     --output_dir ./save/bilingual/bloomz-560m \
-    --max_steps 10 \
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size=4 \
-    --per_device_eval_batch_size=4 \
+    --per_device_train_batch_size 4 \
+    --per_device_eval_batch_size 4 \
     --overwrite_output_dir \
     --augmentation_type bilingual

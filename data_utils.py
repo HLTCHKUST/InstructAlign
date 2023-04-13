@@ -21,13 +21,13 @@ def load_flores_datasets(pivot_langs=['eng_Latn']):
                 subset = f'{lang1}-{lang2}'
                 dset = datasets.load_dataset('facebook/flores', subset)
                 dset = dset.rename_columns({f'sentence_{lang1}': 'sentence1', f'sentence_{lang2}': 'sentence2'})
-                dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2})
+                dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=False)
                 dsets[subset] = dset
 
                 subset = f'{lang2}-{lang1}'
                 dset = datasets.load_dataset('facebook/flores', subset)
                 dset = dset.rename_columns({f'sentence_{lang2}': 'sentence1', f'sentence_{lang1}': 'sentence2'})
-                dset = dset.map(inject_lang, fn_kwargs={'lang1': lang2, 'lang2': lang1})
+                dset = dset.map(inject_lang, fn_kwargs={'lang1': lang2, 'lang2': lang1}, load_from_cache_file=False)
                 dsets[subset] = dset
                 
     dset_subsets = []

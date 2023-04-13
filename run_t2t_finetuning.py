@@ -331,7 +331,10 @@ def main():
         # Return the (input, output) prompt tuple
         return (input_text, output_text)
         
-    def preprocess_fn(examples, is_encoder_decoder, augmentation_type):
+    def preprocess_fn(examples):
+        is_encoder_decoder = config.is_encoder_decoder
+        augmentation_type = data_args.augmentation_type
+
         sent1 = [ex for ex in examples["sentence1"]]
         sent2 = [ex for ex in examples["sentence2"]]
         lang1 = [ex for ex in examples["lang1"]]
@@ -352,33 +355,15 @@ def main():
             ]
             model_inputs["labels"] = labels["input_ids"]
         else:
-            inputs = input_data
+            inputs = input_data[0]
             model_inputs = tokenizer(inputs, max_length=data_args.max_source_length, padding=False, truncation=True)
         return model_inputs
 
-    if training_args.do_train:
-        train_dataset = raw_datasets["train"].select([i for i in range(100)])
-        with training_args.main_process_first(desc="train dataset map pre-processing"):
-            train_dataset = train_dataset.map(
-                preprocess_fn, batched=True, 
-                fn_kwargs={'is_encoder_decoder': config.is_encoder_decoder, 'augmentation_type': data_args.augmentation_type},
-                num_proc=data_args.preprocessing_num_workers,
-                remove_columns=column_names,
-                load_from_cache_file=not data_args.overwrite_cache,
-                desc="Running tokenizer on train dataset",
-            )
-
-    if training_args.do_eval:
-        eval_dataset = raw_datasets["test"].select([i for i in range(100)])
-        with training_args.main_process_first(desc="validation dataset map pre-processing"):
-            eval_dataset = eval_dataset.map(
-                preprocess_fn, batched=True, 
-                fn_kwargs={'is_encoder_decoder': config.is_encoder_decoder, 'augmentation_type': data_args.augmentation_type},
-                num_proc=data_args.preprocessing_num_workers,
-                remove_columns=column_names,
-                load_from_cache_file=not data_args.overwrite_cache,
-                desc="Running tokenizer on validation dataset",
-            )
+    train_dataset = raw_datasets["train"].select([i for i in range(100)])
+    eval_dataset = raw_datasets["test"].select([i for i in range(100)])
+            
+    train_dataset.set_transform(preprocess_fn)
+    eval_dataset.set_transform(preprocess_fn)
 
     # Initialize our Trainer
     if config.is_encoder_decoder:
@@ -386,6 +371,7 @@ def main():
     else:
         collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
+    training_args.remove_unused_columns = False
     trainer = Trainer(
         model=model,
         args=training_args,
