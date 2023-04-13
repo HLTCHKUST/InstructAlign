@@ -213,8 +213,7 @@ if __name__ == '__main__':
 
         inputs = []
         preds = []
-        golds = []
-        
+        golds = []        
         # zero-shot inference
         if not exists(f'outputs/{dset_subset}_{prompt_lang}_{MODEL.split("/")[-1]}.csv'):
             with torch.inference_mode():

@@ -49,6 +49,8 @@ from transformers.utils.versions import require_version
 import datasets
 
 from data_utils import load_flores_datasets
+from augmentation_util import do_augment
+from prompt_utils import prompt_monolingual, prompt_translation, prompt_bilingual
 
 logger = logging.getLogger(__name__)
 
@@ -171,6 +173,12 @@ class DataTrainingArguments:
             )
         },
     )
+    augmentation_type: str = field(
+        default='monolingual',
+        metadata={
+            "help": "Mode for data augmentation (monolingual / translation / bilingual / random)."
+        },
+    )
 
 def main():
     # See all possible arguments in src/transformers/training_args.py
@@ -268,15 +276,80 @@ def main():
 
     # Preprocessing the datasets.
     # We need to tokenize inputs and targets.
-    column_names = raw_datasets["train"].column_names
-    
-    def self_prompt(sent1, sent2, lang1, lang2, is_encoder_decoder):
-        if is_encoder_decoder:
-            return (f'{lang1} | {sent1}', f'{lang2} | {sent2}')
-        else:
-            return f'{lang1} | {sent1} => {lang2} | {sent2}'
+    column_names = raw_datasets["train"].column_names            
         
-    def preprocess_fn(examples, is_encoder_decoder):
+    def self_prompt(sent1, sent2, lang1, lang2, is_encoder_decoder, augmentation_type):
+        # Map language code to language name
+        language_map = {
+            
+        }
+        # Random Choice
+        if augmentation_type == 'random':
+            augmentation_type = random.choice(['monolingual', 'translation', 'bilingual'])
+            
+        if augmentation_type == 'monolingual':
+            rand_proba = random.random()            
+            aug_list = None
+            if rand_proba < 0.24:
+                aug_list = ['infilling']
+            elif rand_proba < 0.48:
+                aug_list = ['deletion']
+            elif rand_proba < 0.72:
+                aug_list = ['deletion']
+            elif rand_proba < 0.8:
+                aug_list = ['infilling', 'deletion']
+            elif rand_proba < 0.88:
+                aug_list = ['infilling', 'permutation']
+            elif rand_proba < 0.96:
+                aug_list = ['deletion', 'permutation']
+            else: # elif rand_proba < 1.0:            
+                aug_list = ['infilling', 'deletion', 'permutation']
+            
+            # Apply monolingual perturbation
+            src_text = sent1
+            tgt_text = sent1
+            for aug in aug_list:
+                src_text = do_augment(src_text, aug)            
+            
+            # Apply monolingual prompting
+            (input_text, output_text) = prompt_monolingual(src_text, tgt_text, is_encoder_decoder)
+
+        elif augmentation_type == 'translation':
+            # Apply translation prompting
+            (input_text, output_text) = prompt_translation(sent1, sent2, lang1, lang2, is_encoder_decoder)
+            
+        elif augmentation_type == 'bilingual':
+            rand_proba = random.random()
+            aug_list = None
+            if rand_proba < 0.24:
+                aug_list = ['infilling']
+            elif rand_proba < 0.48:
+                aug_list = ['deletion']
+            elif rand_proba < 0.72:
+                aug_list = ['deletion']
+            elif rand_proba < 0.8:
+                aug_list = ['infilling', 'deletion']
+            elif rand_proba < 0.88:
+                aug_list = ['infilling', 'permutation']
+            elif rand_proba < 0.96:
+                aug_list = ['deletion', 'permutation']
+            else: # elif rand_proba < 1.0:            
+                aug_list = ['infilling', 'deletion', 'permutation']
+
+            # Apply bilingual perturbation
+            src_text = sent2
+            tgt_text = sent2
+            con_text = sent1
+            for aug in aug_list:
+                src_text = do_augment(src_text, aug)  
+                
+            # Apply bilingual noisy perturbation
+            (input_text, output_text) = prompt_bilingual(src_text, con_text, tgt_text, lang1, lang2, is_encoder_decoder)
+
+        # Return the (input, output) prompt tuple
+        return (input_text, output_text)
+        
+    def preprocess_fn(examples, is_encoder_decoder, augmentation_type):
         sent1 = [ex for ex in examples["sentence1"]]
         sent2 = [ex for ex in examples["sentence2"]]
         lang1 = [ex for ex in examples["lang1"]]
@@ -285,7 +358,7 @@ def main():
         # TODO: Build Prompt
         input_data = []
         for s1, s2, l1, l2 in zip(sent1, sent2, lang1, lang2):
-            input_data.append(self_prompt(s1, s2, l1, l2, is_encoder_decoder))
+            input_data.append(self_prompt(s1, s2, l1, l2, is_encoder_decoder, augmentation_type))
         
         model_inputs = None
         if is_encoder_decoder:
@@ -306,7 +379,7 @@ def main():
         with training_args.main_process_first(desc="train dataset map pre-processing"):
             train_dataset = train_dataset.map(
                 preprocess_fn, batched=True, 
-                fn_kwargs={'is_encoder_decoder': config.is_encoder_decoder},
+                fn_kwargs={'is_encoder_decoder': config.is_encoder_decoder, 'augmentation_type': data_args.augmentation_type},
                 num_proc=data_args.preprocessing_num_workers,
                 remove_columns=column_names,
                 load_from_cache_file=not data_args.overwrite_cache,
@@ -318,7 +391,7 @@ def main():
         with training_args.main_process_first(desc="validation dataset map pre-processing"):
             eval_dataset = eval_dataset.map(
                 preprocess_fn, batched=True, 
-                fn_kwargs={'is_encoder_decoder': config.is_encoder_decoder},
+                fn_kwargs={'is_encoder_decoder': config.is_encoder_decoder, 'augmentation_type': data_args.augmentation_type},
                 num_proc=data_args.preprocessing_num_workers,
                 remove_columns=column_names,
                 load_from_cache_file=not data_args.overwrite_cache,

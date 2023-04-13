@@ -10,8 +10,8 @@ lang_map = {
 
 def load_flores_datasets(pivot_langs=['eng_Latn']):
     def inject_lang(row, lang1, lang2):
-        row['lang1'] = lang1
-        row['lang2'] = lang2
+        row['lang1'] = lang_map[lang1]
+        row['lang2'] = lang_map[lang2]
         return row
 
     dsets = {}
@@ -35,4 +35,5 @@ def load_flores_datasets(pivot_langs=['eng_Latn']):
         for split in ['dev', 'devtest']:
             dset_subsets.append(dsets[key][split])
     combined_dset = datasets.concatenate_datasets(dset_subsets)
+
     return combined_dset.train_test_split(test_size=1000, seed=0)
