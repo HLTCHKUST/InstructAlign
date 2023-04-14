@@ -10,3 +10,4 @@ rouge-score>=0.1.2
 sacremoses==0.0.53
 accelerate==0.18.0
 bitsandbytes==0.37.2
+fairscale==0.4.13
