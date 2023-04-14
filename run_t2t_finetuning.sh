@@ -1,4 +1,4 @@
-# TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 python run_t2t_finetuning.py \
+# TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
 #     --model_name_or_path bigscience/bloomz-560m \
 #     --do_train \
 #     --num_train_epochs 50 \
@@ -20,7 +20,7 @@
 #     --fp16 \
 #     --sharded_ddp zero_dp_3
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 50 \
@@ -42,7 +42,7 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch
     --fp16 \
     --sharded_ddp zero_dp_3
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 50 \
