@@ -13,8 +13,8 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 16 \
+    --per_device_eval_batch_size 16 \
     --overwrite_output_dir \
     --augmentation_type monolingual \
     --fp16 \
@@ -35,8 +35,8 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 16 \
+    --per_device_eval_batch_size 16 \
     --overwrite_output_dir \
     --augmentation_type translation \
     --fp16 \
@@ -57,8 +57,8 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 32 \
+    --per_device_eval_batch_size 32 \
     --overwrite_output_dir \
     --augmentation_type bilingual \
     --fp16 \
