@@ -1,4 +1,4 @@
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 5 \
@@ -16,9 +16,11 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py 
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
     --overwrite_output_dir \
-    --augmentation_type monolingual
+    --augmentation_type monolingual \
+    --fp16 \
+    --sharded_ddp zero_dp_3
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 5 \
@@ -36,9 +38,11 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py 
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
     --overwrite_output_dir \
-    --augmentation_type translation
+    --augmentation_type translation \
+    --fp16 \
+    --sharded_ddp zero_dp_3
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 5 \
@@ -56,4 +60,6 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py 
     --per_device_train_batch_size 4 \
     --per_device_eval_batch_size 4 \
     --overwrite_output_dir \
-    --augmentation_type bilingual
+    --augmentation_type bilingual \
+    --fp16 \
+    --sharded_ddp zero_dp_3    
