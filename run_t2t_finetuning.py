@@ -359,8 +359,8 @@ def main():
             model_inputs = tokenizer(inputs, max_length=data_args.max_source_length, padding=False, truncation=True)
         return model_inputs
 
-    train_dataset = raw_datasets["train"].select([i for i in range(100)])
-    eval_dataset = raw_datasets["test"].select([i for i in range(100)])
+    train_dataset = raw_datasets["train"] # .select([i for i in range(100)])
+    eval_dataset = raw_datasets["test"] # .select([i for i in range(100)])
             
     train_dataset.set_transform(preprocess_fn)
     eval_dataset.set_transform(preprocess_fn)
