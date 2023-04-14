@@ -1,4 +1,4 @@
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 5 \
@@ -13,12 +13,13 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py 
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 16 \
+    --per_device_eval_batch_size 16 \
     --overwrite_output_dir \
-    --augmentation_type monolingual
+    --augmentation_type monolingual \
+    --fp16
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=4,5,6,7 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 5 \
@@ -33,12 +34,13 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py 
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 16 \
+    --per_device_eval_batch_size 16 \
     --overwrite_output_dir \
-    --augmentation_type translation
+    --augmentation_type translation \
+    --fp16
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py \
+TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=8,9 python run_t2t_finetuning.py \
     --model_name_or_path bigscience/bloomz-560m \
     --do_train \
     --num_train_epochs 5 \
@@ -53,7 +55,8 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=6 python run_t2t_finetuning.py 
     --learning_rate 1e-5 \
     --preprocessing_num_workers 16 \
     --dataloader_num_workers 16 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 32 \
+    --per_device_eval_batch_size 32 \
     --overwrite_output_dir \
-    --augmentation_type bilingual
+    --augmentation_type bilingual \
+    --fp16
