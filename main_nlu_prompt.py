@@ -21,61 +21,12 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, AutoModelForCausalLM
 from nusacrowd import NusantaraConfigHelper
 
+from data_utils import load_xnli_dataset, load_nusa_menulis_dataset, load_nlu_tasks
 #!pip install git+https://github.com/IndoNLP/nusa-crowd.git@release_exp
 #!pip install transformers
 #!pip install sentencepiece
 
 DEBUG=False
-
-"""# Loading NLU Datasets"""
-TEXT_CLASSIFICATION_TASKS = [
-    # Monolongual Senti, Emot, NLI 
-    'emot_nusantara_text',
-    'imdb_jv_nusantara_text',
-    'indolem_sentiment_nusantara_text',
-    'smsa_nusantara_text',    
-    'indonli_nusantara_pairs',
-    'su_emot_nusantara_text',
-    
-    # NusaX Sentiment
-    'nusax_senti_ace_nusantara_text',
-    'nusax_senti_ban_nusantara_text',
-    'nusax_senti_bjn_nusantara_text',
-    'nusax_senti_bug_nusantara_text',
-    'nusax_senti_eng_nusantara_text',
-    'nusax_senti_ind_nusantara_text',
-    'nusax_senti_jav_nusantara_text',
-    'nusax_senti_min_nusantara_text',
-    'nusax_senti_sun_nusantara_text',
-    
-#     # Nusa Kalimat Emot
-#     'nusa_kalimat_emot_sun_nusantara_text',
-#     'nusa_kalimat_emot_jav_nusantara_text',
-#     'nusa_kalimat_emot_min_nusantara_text',
-    
-#     # Nusa Kalimat Senti
-#     'nusa_kalimat_senti_sun_nusantara_text',
-#     'nusa_kalimat_senti_jav_nusantara_text',
-#     'nusa_kalimat_senti_min_nusantara_text',
-    
-#     # Nusa Alinea Emot
-#     'nusa_alinea_emot_sun_nusantara_text',
-#     'nusa_alinea_emot_jav_nusantara_text',
-#     'nusa_alinea_emot_min_nusantara_text',
-#     'nusa_alinea_emot_bug_nusantara_text',
-    
-#     # Nusa Alinea Topic
-#     'nusa_alinea_topic_sun_nusantara_text',
-#     'nusa_alinea_topic_jav_nusantara_text',
-#     'nusa_alinea_topic_min_nusantara_text',
-#     'nusa_alinea_topic_bug_nusantara_text',
-    
-#     # Nusa Alinea Paragraph
-#     'nusa_alinea_paragraph_sun_nusantara_text',
-#     'nusa_alinea_paragraph_jav_nusantara_text',
-#     'nusa_alinea_paragraph_min_nusantara_text',
-#     'nusa_alinea_paragraph_bug_nusantara_text',
-]
 
 def to_prompt(input, prompt, labels, prompt_lang):
     # single label
@@ -96,12 +47,6 @@ def to_prompt(input, prompt, labels, prompt_lang):
 
     return prompt
 
-def load_nlu_tasks():
-    conhelps = NusantaraConfigHelper()
-    nlu_datasets = {
-        helper.config.name: helper.load_dataset() for helper in conhelps.filtered(lambda x: x.config.name in TEXT_CLASSIFICATION_TASKS)
-    }
-    return nlu_datasets
 
 @torch.no_grad()
 def get_logprobs(model, tokenizer, prompt, label_ids=None, label_attn=None):
@@ -146,6 +91,11 @@ if __name__ == '__main__':
     # Load Dataset
     print('Load NLU Datasets...')
     nlu_datasets = load_nlu_tasks()
+    nusa_menulis_dataset = load_nusa_menulis_dataset()
+    xnli_dataset = load_xnli_dataset()
+
+    nlu_datasets.update(nusa_menulis_dataset)
+    nlu_datasets.update(xnli_dataset)
 
     print(f'Loaded {len(nlu_datasets)} NLU datasets')
     for i, dset_subset in enumerate(nlu_datasets.keys()):
@@ -178,7 +128,11 @@ if __name__ == '__main__':
         if DEBUG:
             print(dset_subset)
 
-        label_names = data.features['label'].names
+        try:
+            label_names = data.features['label'].names
+        except:
+            label_names = list(set(data['test']['label']))
+
         # normalize some labels for more natural prompt:
         if dset_subset == 'imdb_jv_nusantara_text':
             label_names = ['positive', 'negative']
