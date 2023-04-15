@@ -217,7 +217,7 @@ def main():
     set_seed(training_args.seed)
 
     # Load the datasets
-    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn'])
+    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn'], augmentation=data_args.augmentation_type)
 
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.

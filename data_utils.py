@@ -8,21 +8,33 @@ lang_map = {
     'bjn_Latn': 'Banjarese', 'ban_Latn': 'Balinese', 'min_Latn': 'Minangkabau'
 }
 
-def load_flores_datasets(pivot_langs=['eng_Latn']):
+def load_flores_datasets(pivot_langs=['eng_Latn'], augmentation='multilingual'):
     def inject_lang(row, lang1, lang2):
         row['lang1'] = lang_map[lang1]
         row['lang2'] = lang_map[lang2]
         return row
 
     dsets = {}
+    if augmentation == 'monolingual':
+        for lang1 in pivot_langs:
+            # Load a single dataset from the pivot language as `lang1` and random `lang2`
+            lang2 = 'bug_Latn'  # This random `lang2` is not used for training
+            subset = f'{lang1}-{lang2}'
+            dset = datasets.load_dataset('facebook/flores', subset)
+            dset = dset.rename_columns({f'sentence_{lang1}': 'sentence1', f'sentence_{lang2}': 'sentence2'})
+            dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=False)
+            dsets[subset] = dset
+        
     for lang1 in pivot_langs:
         for lang2 in ['ind_Latn', 'sun_Latn', 'jav_Latn', 'bug_Latn', 'ace_Latn', 'bjn_Latn', 'ban_Latn', 'min_Latn']:
             if lang1 != lang2:
-                subset = f'{lang1}-{lang2}'
-                dset = datasets.load_dataset('facebook/flores', subset)
-                dset = dset.rename_columns({f'sentence_{lang1}': 'sentence1', f'sentence_{lang2}': 'sentence2'})
-                dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=False)
-                dsets[subset] = dset
+                if augmentation != 'monolingual':
+                    # If not monolingual take both directions
+                    subset = f'{lang1}-{lang2}'
+                    dset = datasets.load_dataset('facebook/flores', subset)
+                    dset = dset.rename_columns({f'sentence_{lang1}': 'sentence1', f'sentence_{lang2}': 'sentence2'})
+                    dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=False)
+                    dsets[subset] = dset
 
                 subset = f'{lang2}-{lang1}'
                 dset = datasets.load_dataset('facebook/flores', subset)
