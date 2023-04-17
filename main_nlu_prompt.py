@@ -131,13 +131,14 @@ if __name__ == '__main__':
         try:
             label_names = data.features['label'].names
         except:
-            label_names = list(set(data['test']['label']))
+            label_names = list(set(data['label']))
 
         # normalize some labels for more natural prompt:
         if dset_subset == 'imdb_jv_nusantara_text':
             label_names = ['positive', 'negative']
         if dset_subset == 'indonli_nusantara_pairs':
             label_names = ['no', 'yes', 'maybe']
+        label_to_id_dict = { l : i for i, l in enumerate(label_names) }
 
         en_id_label_map = {
             '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5',	'special': 'khusus', 'general': 'umum',
@@ -177,7 +178,7 @@ if __name__ == '__main__':
                     pred = argmax([o.cpu().detach() for o in out])
                     inputs.append(prompt_text)
                     preds.append(pred)
-                    golds.append(sample['label'])
+                    golds.append(label_to_id_dict[sample['label']] if type(sample['label']) == str else sample['label'])
      
             inference_df = pd.DataFrame(list(zip(inputs, preds, golds)), columns =["Input", 'Pred', 'Gold'])
             inference_df.to_csv(f'outputs/{dset_subset}_{prompt_lang}_{MODEL.split("/")[-1]}.csv', index=False)
@@ -189,7 +190,7 @@ if __name__ == '__main__':
                 for row in reader:
                     inputs.append(row["Input"])
                     preds.append(row["Pred"])
-                    golds.append(row["Gold"])
+                    golds.append(label_to_id_dict[row["Gold"]] if type(row["Gold"]) == str else row["Gold"])
 
         acc, f1 = accuracy_score(golds, preds), f1_score(golds, preds, average='macro')
         print(dset_subset)
