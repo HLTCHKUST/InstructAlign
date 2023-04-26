@@ -147,7 +147,8 @@ DATA_TO_ID3_PROMPT = {
 
 SENTIMENT_EN = "[INPUT]\nWhat would be the sentiment of the text above? [OPTIONS]? [LABELS_CHOICE]"
 EMOT_EN = '[INPUT]\nWhat would be the emotion of the text above? [OPTIONS]? [LABELS_CHOICE]'
-NLI_EN = '[INPUT_A]\nBased on the previous passage, is it true that "[INPUT_B]"? Yes, no, or maybe? [OPTIONS]? [LABELS_CHOICE]'
+NLI_EN = '[INPUT_A]\nBased on the previous passage, is it true that "[INPUT_B]"? [OPTIONS]? [LABELS_CHOICE]'
+
 DATA_TO_EN_PROMPT = {
     'emot_nusantara_text': EMOT_EN,
     'imdb_jv_nusantara_text': SENTIMENT_EN,
@@ -201,7 +202,7 @@ DATA_TO_EN_PROMPT = {
 
 SENTIMENT_EN2 =  'What is the sentiment of this text?\nText: [INPUT]\nAnswer with [OPTIONS]: [LABELS_CHOICE]'
 EMOT_EN2 = 'What is the emotion of this text?\nText: [INPUT]\nAnswer with [OPTIONS]: [LABELS_CHOICE]'
-NLI_EN2 = '[INPUT_A]\n\nQuestion: Does this imply that "[INPUT_B]"? Yes, no, or maybe? [LABELS_CHOICE]'
+NLI_EN2 = '[INPUT_A]\nUsing only the above description and what you know about the world, "[INPUT_B]" is definitely [OPTIONS]? [LABEL_CHOICE]'
 DATA_TO_EN2_PROMPT = {
     'emot_nusantara_text': EMOT_EN2,
     'imdb_jv_nusantara_text': SENTIMENT_EN2,
@@ -255,7 +256,7 @@ DATA_TO_EN2_PROMPT = {
 
 SENTIMENT_EN3 =  'Text: [INPUT]\n\nPlease classify the sentiment of above text. Answer with [OPTIONS]: [LABELS_CHOICE]'
 EMOT_EN3 = 'Text: [INPUT]\n\nPlease classify the emotion of above text. Answer with [OPTIONS]: [LABELS_CHOICE]'
-NLI_EN3 = 'Given that [INPUT_A]. Does it follow that [INPUT_B]? yes, no, or maybe? [LABELS_CHOICE]'
+NLI_EN3 = 'Given "[INPUT_A]" Should we assume that "[INPUT_B]" is true? [OPTIONS]? [LABEL_CHOICE]'
 DATA_TO_EN3_PROMPT = {
     'emot_nusantara_text': EMOT_EN3,
     'imdb_jv_nusantara_text': SENTIMENT_EN3,

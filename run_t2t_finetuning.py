@@ -49,7 +49,7 @@ from transformers.utils import check_min_version
 from transformers.utils.versions import require_version
 import datasets
 
-from data_utils import load_flores_datasets
+from data_utils import load_flores_datasets, load_rehearsal_dataset
 from augmentation_utils import do_augment
 from prompt_utils import prompt_monolingual, prompt_translation, prompt_bilingual
 
@@ -159,6 +159,18 @@ class DataTrainingArguments:
             "help": "Mode for data augmentation (monolingual / translation / bilingual / random)."
         },
     )
+    continual_type: str = field(
+        default=None,
+        metadata={
+            "help": "Mode for continual learning method (rehearsal / None)."
+        },
+    )
+    continual_size: int = field(
+        default=100,
+        metadata={
+            "help": "Mode for data  (monolingual / translation / bilingual / random)."
+        },
+    )
 
 def main():
     # See all possible arguments in src/transformers/training_args.py
@@ -217,7 +229,7 @@ def main():
     set_seed(training_args.seed)
 
     # Load the datasets
-    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn'], augmentation=data_args.augmentation_type)
+    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn', 'ind_Latn'], augmentation=data_args.augmentation_type)
 
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
@@ -260,8 +272,16 @@ def main():
 
     # Preprocessing the datasets.
     # We need to tokenize inputs and targets.
-    column_names = raw_datasets["train"].column_names            
-        
+    column_names = raw_datasets["train"].column_names
+
+    # Handle Continual Flag
+    if data_args.continual_type is not None:
+        # Append training data with rehearsal
+        (sample_en_dset, sample_id_dset) = load_rehearsal_dataset(n_samples=data_args.continual_size, random_seed=training_args.seed)
+        raw_datasets["train"] = datasets.interleave_datasets([
+            datasets.Dataset.from_list(list(sample_en_dset)), datasets.Dataset.from_list(list(sample_id_dset)), raw_datasets["train"]
+        ])
+    
     def self_prompt(sent1, sent2, lang1, lang2, is_encoder_decoder, augmentation_type):
         # Random Choice
         if augmentation_type == 'random':
@@ -334,20 +354,28 @@ def main():
     def preprocess_fn(examples):
         is_encoder_decoder = config.is_encoder_decoder
         augmentation_type = data_args.augmentation_type
-
-        sent1 = [ex for ex in examples["sentence1"]]
-        sent2 = [ex for ex in examples["sentence2"]]
-        lang1 = [ex for ex in examples["lang1"]]
-        lang2 = [ex for ex in examples["lang2"]]
-                   
-        # Build Prompt
+        
         input_data = []
-        for s1, s2, l1, l2 in zip(sent1, sent2, lang1, lang2):
-            input_data.append(self_prompt(s1, s2, l1, l2, is_encoder_decoder, augmentation_type))
+        for inputs, targets, sent1, sent2, lang1, lang2 in zip(
+                examples["inputs"], examples["targets"], examples["sentence1"], 
+                examples["sentence2"], examples["lang1"], examples["lang2"]
+            ):
+            if inputs is None:
+                # Build Prompt
+                input_data = []
+                for s1, s2, l1, l2 in zip(sent1, sent2, lang1, lang2):
+                    input_data.append(self_prompt(s1, s2, l1, l2, is_encoder_decoder, augmentation_type))
+            else:
+                # Use xP3 Prompt data
+                if is_encoder_decoder:
+                    input_data.append((inputs, targets))
+                else:
+                    prompt = (f'{inputs} {targets}')
+                    input_data.append((prompt, prompt))
         
         model_inputs = None
         if is_encoder_decoder:
-            inputs, labels = input_data
+            inputs, labels = list(map(lambda x: x[0], input_data)), list(map(lambda x: x[1], input_data))
             model_inputs = tokenizer(inputs, max_length=data_args.max_source_length, padding=False, truncation=True)
             labels = tokenizer(labels, max_length=data_args.max_target_length, padding=False, truncation=True)
             labels["input_ids"] = [

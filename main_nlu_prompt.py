@@ -38,7 +38,7 @@ def to_prompt(input, prompt, labels, prompt_lang):
 
     # replace [OPTIONS] to A, B, or C
     if "[OPTIONS]" in prompt:
-        new_labels = [f'"{l}"' for l in labels]
+        new_labels = [f'{l}' for l in labels]
         new_labels[-1] = ("or " if 'EN' in prompt_lang else  "atau ") + new_labels[-1] 
         if len(new_labels) > 2:
             prompt = prompt.replace('[OPTIONS]', ', '.join(new_labels))
@@ -92,10 +92,10 @@ if __name__ == '__main__':
     print('Load NLU Datasets...')
     nlu_datasets = load_nlu_tasks()
     nusa_menulis_dataset = load_nusa_menulis_dataset()
-    xnli_dataset = load_xnli_dataset()
+    # xnli_dataset = load_xnli_dataset()
 
     nlu_datasets.update(nusa_menulis_dataset)
-    nlu_datasets.update(xnli_dataset)
+    # nlu_datasets.update(xnli_dataset)
 
     print(f'Loaded {len(nlu_datasets)} NLU datasets')
     for i, dset_subset in enumerate(nlu_datasets.keys()):
@@ -132,13 +132,16 @@ if __name__ == '__main__':
             label_names = data.features['label'].names
         except:
             label_names = list(set(data['label']))
+        label_to_id_dict = { l : i for i, l in enumerate(label_names) }
 
         # normalize some labels for more natural prompt:
         if dset_subset == 'imdb_jv_nusantara_text':
             label_names = ['positive', 'negative']
-        if dset_subset == 'indonli_nusantara_pairs':
+        elif dset_subset == 'indonli_nusantara_pairs':
             label_names = ['no', 'yes', 'maybe']
-        label_to_id_dict = { l : i for i, l in enumerate(label_names) }
+        elif 'xnli' in dset_subset:
+            xnli_map = {'neutral': 'inconclusive', 'contradiction': 'false', 'entailment': 'true'}
+            label_names = list(map(lambda x: xnli_map[x], label_names))
 
         en_id_label_map = {
             '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5',	'special': 'khusus', 'general': 'umum',
@@ -190,7 +193,7 @@ if __name__ == '__main__':
                 for row in reader:
                     inputs.append(row["Input"])
                     preds.append(row["Pred"])
-                    golds.append(label_to_id_dict[row["Gold"]] if type(row["Gold"]) == str else row["Gold"])
+                    golds.append(row["Gold"])
 
         acc, f1 = accuracy_score(golds, preds), f1_score(golds, preds, average='macro')
         print(dset_subset)
