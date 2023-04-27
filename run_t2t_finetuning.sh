@@ -128,8 +128,9 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch
     --learning_rate 1e-5 \
     --preprocessing_num_workers 8 \
     --dataloader_num_workers 8 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 2 \
+    --per_device_eval_batch_size 2 \
+    --gradient_accumulation_steps 2 \
     --overwrite_output_dir \
     --augmentation_type pair \
     --continual_type rehearsal \

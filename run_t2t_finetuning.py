@@ -280,7 +280,7 @@ def main():
         (sample_en_dset, sample_id_dset) = load_rehearsal_dataset(n_samples=data_args.continual_size, random_seed=training_args.seed)
         raw_datasets["train"] = datasets.interleave_datasets([
             datasets.Dataset.from_list(list(sample_en_dset)), datasets.Dataset.from_list(list(sample_id_dset)), raw_datasets["train"]
-        ])
+        ], stopping_strategy='all_exhausted')
     
     def self_prompt(sent1, sent2, lang1, lang2, is_encoder_decoder, augmentation_type):
         # Random Choice
@@ -354,6 +354,15 @@ def main():
     def preprocess_fn(examples):
         is_encoder_decoder = config.is_encoder_decoder
         augmentation_type = data_args.augmentation_type
+        
+        if 'inputs' not in examples.keys():
+            examples['inputs'] = [None for _ in len(examples["sentence1"])]
+            examples['targets'] = [None for _ in len(examples["sentence1"])]
+        elif 'sentence1' not in examples.keys():
+            examples['sentence1'] = [None for _ in len(examples["inputs"])]
+            examples['sentence2'] = [None for _ in len(examples["inputs"])]
+            examples['lang1'] = [None for _ in len(examples["inputs"])]
+            examples['lang2'] = [None for _ in len(examples["inputs"])]
         
         input_data = []
         for inputs, targets, sent1, sent2, lang1, lang2 in zip(
