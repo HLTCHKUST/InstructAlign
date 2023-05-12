@@ -54,7 +54,7 @@ If you use the dataset from this work (i.e., NusaX, NusaMenulis, etc) please als
 }
 ```
 
-### Files
+### Files Structure
 - run_t2t_finetuning.py &rarr; main python script for running the cross-lingual alignment training
 - run_t2t_finetuning.sh &rarr; shell script for running various cross-lingual alignment training experiments
 - nlu_prompt.py &rarr; python script storing the prompts that are used for zero-shot inference prompting
