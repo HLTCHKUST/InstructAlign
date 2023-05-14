@@ -281,7 +281,7 @@ def main():
         raw_datasets["train"] = datasets.interleave_datasets([
             datasets.Dataset.from_list(list(sample_en_dset)), datasets.Dataset.from_list(list(sample_id_dset)), raw_datasets["train"]
         ], stopping_strategy='all_exhausted')
-    
+
     def self_prompt(sent1, sent2, lang1, lang2, is_encoder_decoder, augmentation_type):
         # Random Choice
         if augmentation_type == 'random':
@@ -356,13 +356,13 @@ def main():
         augmentation_type = data_args.augmentation_type
         
         if 'inputs' not in examples.keys():
-            examples['inputs'] = [None for _ in len(examples["sentence1"])]
-            examples['targets'] = [None for _ in len(examples["sentence1"])]
+            examples['inputs'] = [None for _ in range(len(examples["sentence1"]))]
+            examples['targets'] = [None for _ in range(len(examples["sentence1"]))]
         elif 'sentence1' not in examples.keys():
-            examples['sentence1'] = [None for _ in len(examples["inputs"])]
-            examples['sentence2'] = [None for _ in len(examples["inputs"])]
-            examples['lang1'] = [None for _ in len(examples["inputs"])]
-            examples['lang2'] = [None for _ in len(examples["inputs"])]
+            examples['sentence1'] = [None for _ in range(len(examples["inputs"]))]
+            examples['sentence2'] = [None for _ in range(len(examples["inputs"]))]
+            examples['lang1'] = [None for _ in range(len(examples["inputs"]))]
+            examples['lang2'] = [None for _ in range(len(examples["inputs"]))]
         
         input_data = []
         for inputs, targets, sent1, sent2, lang1, lang2 in zip(
