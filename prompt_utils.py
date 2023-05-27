@@ -17,6 +17,15 @@ TRANSLATION_PROMPTS = [
     "[SOURCE_TEXT]\nTranslate the text above to [TARGET_LANG]. [TARGET_TEXT]",
     "Input text: [SOURCE_TEXT]\nHow would you translate that in [TARGET_LANG]? [TARGET_TEXT]",
 ]
+    
+XSS_PROMPTS = [
+    "[SOURCE_LANG] sentence: [SOURCE_TEXT]\n[TARGET_LANG] sentence: [TARGET_TEXT]\nDo the two sentences have the same meaning? [LABEL]",
+    "Sentence A: [SOURCE_TEXT]\nSentence B: [TARGET_TEXT]\nDo sentence A and sentence B have the same meaning? [LABEL]",
+    "[SOURCE_LANG] sentence: [SOURCE_TEXT]\n[TARGET_LANG] sentence: [TARGET_TEXT]\nAre the two sentences equivalent? [LABEL]",
+    "Sentence A: [SOURCE_TEXT]\nSentence B: [TARGET_TEXT]\nAre sentence A and sentence B equivalent? [LABEL]",
+    'Is the [SOURCE_LANG] sentence "[SOURCE_TEXT]" equivalent to the [TARGET_LANG] sentence "[TARGET_TEXT]"? [LABEL]',
+    'Is the sentence "[SOURCE_TEXT]" equivalent to the sentence "[TARGET_TEXT]"? [LABEL]',
+]
 
 BILINGUAL_PROMPTS = [
     '[SOURCE_TEXT]. Denoise the previous text in [SOURCE_LANG] to it equivalent to the following [CONTEXT_LANG] sentence: [CONTEXT]\n[TARGET_TEXT]',
@@ -48,6 +57,19 @@ def prompt_translation(src_text, tgt_text, src_lang, tgt_lang, is_encoder_decode
         return (prompt, tgt_text)
     else:
         prompt = prompt.replace('[TARGET_TEXT]', tgt_text)
+        return (prompt, prompt)
+    
+def prompt_xss(src_text, tgt_text, src_lang, tgt_lang, label, is_encoder_decoder):
+    prompt = random.choice(XSS_PROMPTS)
+    prompt = prompt.replace('[SOURCE_LANG]', src_lang)
+    prompt = prompt.replace('[TARGET_LANG]', tgt_lang)
+    prompt = prompt.replace('[SOURCE_TEXT]', src_text)
+    prompt = prompt.replace('[TARGET_TEXT]', tgt_text)
+    if is_encoder_decoder:
+        prompt = prompt.replace('[LABEL]', '')
+        return (prompt, label)
+    else:
+        prompt = prompt.replace('[LABEL]', label)
         return (prompt, prompt)
 
 def prompt_bilingual(src_text, con_text, tgt_text, src_lang, con_lang, is_encoder_decoder):

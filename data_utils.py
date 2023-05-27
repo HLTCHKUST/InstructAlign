@@ -87,17 +87,17 @@ NUSA_MENULIS_TASKS = [
 #     ('nusa_alinea','paragraph','rej'),
 #     ('nusa_alinea','paragraph','sun'),
 
-#     # Nusa Alinea Topic
-#     ('nusa_alinea','topic','bew'),
-#     ('nusa_alinea','topic','btk'),
-#     ('nusa_alinea','topic','bug'),
-#     ('nusa_alinea','topic','jav'),
-#     ('nusa_alinea','topic','mad'),
-#     ('nusa_alinea','topic','mak'),
-#     ('nusa_alinea','topic','min'),
-#     ('nusa_alinea','topic','mui'),
-#     ('nusa_alinea','topic','rej'),
-#     ('nusa_alinea','topic','sun'),
+    # Nusa Alinea Topic
+    ('nusa_alinea','topic','bew'),
+    ('nusa_alinea','topic','btk'),
+    ('nusa_alinea','topic','bug'),
+    ('nusa_alinea','topic','jav'),
+    ('nusa_alinea','topic','mad'),
+    ('nusa_alinea','topic','mak'),
+    ('nusa_alinea','topic','min'),
+    ('nusa_alinea','topic','mui'),
+    ('nusa_alinea','topic','rej'),
+    ('nusa_alinea','topic','sun'),
 ]
 
 def load_single_dataset(dataset, task, lang, base_path='./nusamenulis'):
@@ -157,7 +157,7 @@ def load_flores_datasets(pivot_langs=['eng_Latn'], augmentation='multilingual'):
             subset = f'{lang1}-{lang2}'
             dset = datasets.load_dataset('facebook/flores', subset)
             dset = dset.rename_columns({f'sentence_{lang1}': 'sentence1', f'sentence_{lang2}': 'sentence2'})
-            dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=False)
+            dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=True)
             dsets[subset] = dset
         
     for lang1 in pivot_langs:
@@ -168,13 +168,13 @@ def load_flores_datasets(pivot_langs=['eng_Latn'], augmentation='multilingual'):
                     subset = f'{lang1}-{lang2}'
                     dset = datasets.load_dataset('facebook/flores', subset)
                     dset = dset.rename_columns({f'sentence_{lang1}': 'sentence1', f'sentence_{lang2}': 'sentence2'})
-                    dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=False)
+                    dset = dset.map(inject_lang, fn_kwargs={'lang1': lang1, 'lang2': lang2}, load_from_cache_file=True)
                     dsets[subset] = dset
 
                 subset = f'{lang2}-{lang1}'
                 dset = datasets.load_dataset('facebook/flores', subset)
                 dset = dset.rename_columns({f'sentence_{lang2}': 'sentence1', f'sentence_{lang1}': 'sentence2'})
-                dset = dset.map(inject_lang, fn_kwargs={'lang1': lang2, 'lang2': lang1}, load_from_cache_file=False)
+                dset = dset.map(inject_lang, fn_kwargs={'lang1': lang2, 'lang2': lang1}, load_from_cache_file=True)
                 dsets[subset] = dset
                 
     dset_subsets = []

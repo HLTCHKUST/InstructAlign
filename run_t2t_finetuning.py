@@ -288,6 +288,8 @@ def main():
             augmentation_type = random.choice(['monolingual', 'translation', 'bilingual'])
         elif augmentation_type == 'pair':
             augmentation_type = random.choice(['translation', 'bilingual'])
+        elif augmentation_type == 'pair+xss':
+            augmentation_type = random.choice(['translation', 'bilingual', 'xss'])
             
         if augmentation_type == 'monolingual':
             rand_proba = random.random()            
@@ -297,7 +299,7 @@ def main():
             elif rand_proba < 0.48:
                 aug_list = ['deletion']
             elif rand_proba < 0.72:
-                aug_list = ['deletion']
+                aug_list = ['permutation']
             elif rand_proba < 0.8:
                 aug_list = ['infilling', 'deletion']
             elif rand_proba < 0.88:
@@ -319,7 +321,43 @@ def main():
         elif augmentation_type == 'translation':
             # Apply translation prompting
             (input_text, output_text) = prompt_translation(sent1, sent2, lang1, lang2, is_encoder_decoder)
-            
+
+        elif augmentation_type == 'xss':
+            # Apply perturbation
+            rand_proba = random.random()
+            if rand_proba < 0.5:
+                label = 'yes'
+            else:
+                label = 'no'
+                
+                rand_proba = random.random()
+                if rand_proba < 0.24:
+                    aug_list = ['infilling']
+                elif rand_proba < 0.48:
+                    aug_list = ['deletion']
+                elif rand_proba < 0.72:
+                    aug_list = ['permutation']
+                elif rand_proba < 0.8:
+                    aug_list = ['infilling', 'deletion']
+                elif rand_proba < 0.88:
+                    aug_list = ['infilling', 'permutation']
+                elif rand_proba < 0.96:
+                    aug_list = ['deletion', 'permutation']
+                else: # elif rand_proba < 1.0:            
+                    aug_list = ['infilling', 'deletion', 'permutation']
+                    
+                # Apply monolingual perturbation
+                aug_text1 = sent1
+                aug_text2 = sent2
+                for aug in aug_list:
+                    aug_text1 = do_augment(aug_text1, aug)
+                    aug_text2 = do_augment(aug_text2, aug)
+                sent1 = aug_text1
+                sent2 = aug_text2
+                
+            # Apply xss prompting
+            (input_text, output_text) = prompt_xss(sent1, sent2, lang1, lang2, label, is_encoder_decoder)
+                        
         elif augmentation_type == 'bilingual':
             rand_proba = random.random()
             aug_list = None
@@ -328,7 +366,7 @@ def main():
             elif rand_proba < 0.48:
                 aug_list = ['deletion']
             elif rand_proba < 0.72:
-                aug_list = ['deletion']
+                aug_list = ['permutation']
             elif rand_proba < 0.8:
                 aug_list = ['infilling', 'deletion']
             elif rand_proba < 0.88:

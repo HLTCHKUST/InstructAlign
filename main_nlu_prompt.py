@@ -77,12 +77,16 @@ def predict_classification(model, tokenizer, prompt, labels):
     return probs
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        raise ValueError('main_nlu_prompt.py <prompt_lang> <model_path_or_name>')
+    if len(sys.argv) < 3:
+        raise ValueError('main_nlu_prompt.py <prompt_lang> <model_path_or_name> <optional_output_name>')
 
     prompt_lang = sys.argv[1]
     MODEL = sys.argv[2]
 
+    output_name = None
+    if len(sys.argv) == 4:
+        output_name = sys.argv[3]
+        
     os.makedirs('./outputs', exist_ok=True) 
 
     # Load Prompt
@@ -184,7 +188,10 @@ if __name__ == '__main__':
                     golds.append(label_to_id_dict[sample['label']] if type(sample['label']) == str else sample['label'])
      
             inference_df = pd.DataFrame(list(zip(inputs, preds, golds)), columns =["Input", 'Pred', 'Gold'])
-            inference_df.to_csv(f'outputs/{dset_subset}_{prompt_lang}_{MODEL.split("/")[-1]}.csv', index=False)
+            if output_name is not None:
+                inference_df.to_csv(f'outputs/{dset_subset}_{prompt_lang}_{output_name}.csv', index=False)
+            else:
+                inference_df.to_csv(f'outputs/{dset_subset}_{prompt_lang}_{MODEL.split("/")[-1]}.csv', index=False)
         # if output log exists, skip
         else:
             print("Output exist, use existing log instead")
@@ -202,4 +209,7 @@ if __name__ == '__main__':
         metrics[dset_subset] = {'accuracy': acc, 'f1_score': f1}
         print("===\n\n")
 
-    pd.DataFrame.from_dict(metrics).T.reset_index().to_csv(f'metrics/nlu_results_{prompt_lang}_{MODEL.split("/")[-1]}.csv', index=False)
+    if output_name is not None:
+        pd.DataFrame.from_dict(metrics).T.reset_index().to_csv(f'metrics/nlu_results_{prompt_lang}_{output_name}.csv', index=False)
+    else:
+        pd.DataFrame.from_dict(metrics).T.reset_index().to_csv(f'metrics/nlu_results_{prompt_lang}_{MODEL.split("/")[-1]}.csv', index=False)
