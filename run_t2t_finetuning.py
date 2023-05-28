@@ -470,7 +470,6 @@ def main():
             model_inputs["labels"] = labels["input_ids"]
         else:
             inputs = list(map(lambda x: x[0], input_data))
-            print(inputs)
             model_inputs = tokenizer(inputs, max_length=data_args.max_source_length, padding=False, truncation=True)
         return model_inputs
 
