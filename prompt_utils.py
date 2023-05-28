@@ -1,12 +1,12 @@
 import random
 
 MONOLINGUAL_PROMPTS = [
-    'Denoise the following noisy text in [SOURCE_LANG]: "[SOURCE_TEXT]",  to make a complete sentence. [TARGET_TEXT]',
+    'Denoise the following noisy [SOURCE_LANG] text: "[SOURCE_TEXT]",  to make a correct sentence. [TARGET_TEXT]',
     "Fix and complete the following [SOURCE_LANG] sentence: [SOURCE_TEXT]\n[TARGET_TEXT]",
-    "Text in [SOURCE_LANG]: [SOURCE_TEXT]\nHow would you fix the sentence to make a correct sentence? [TARGET_TEXT]",
-    'Denoise the following noisy text "[SOURCE_TEXT]" to make a complete sentence. [TARGET_TEXT]',
+    "Sentence in [SOURCE_LANG]: [SOURCE_TEXT]\nHow would you fix the sentence to make a correct sentence? [TARGET_TEXT]",
+    'Denoise the following noisy text "[SOURCE_TEXT]" to make a correct [SOURCE_LANG] sentence. [TARGET_TEXT]',
     "Fix and complete the following sentence: [SOURCE_TEXT]\n[TARGET_TEXT]",
-    "Input text: [SOURCE_TEXT]\nHow would you fix the sentence to make a correct sentence? [TARGET_TEXT]",
+    "Input text: [SOURCE_TEXT]\nHow would you fix the sentence to make a correct [SOURCE_LANG] sentence? [TARGET_TEXT]",
 ]
     
 TRANSLATION_PROMPTS = [
@@ -15,7 +15,7 @@ TRANSLATION_PROMPTS = [
     "Text in [SOURCE_LANG]: [SOURCE_TEXT]\nHow would you translate that in [TARGET_LANG]? [TARGET_TEXT]",
     "Translate the following text to [TARGET_LANG].\nText: [SOURCE_TEXT]\nTranslation: [TARGET_TEXT]",
     "[SOURCE_TEXT]\nTranslate the text above to [TARGET_LANG]. [TARGET_TEXT]",
-    "Input text: [SOURCE_TEXT]\nHow would you translate that in [TARGET_LANG]? [TARGET_TEXT]",
+    "Input text: [SOURCE_TEXT]\nHow would you translate that into [TARGET_LANG]? [TARGET_TEXT]",
 ]
     
 XSS_PROMPTS = [
@@ -28,11 +28,11 @@ XSS_PROMPTS = [
 ]
 
 BILINGUAL_PROMPTS = [
-    '[SOURCE_TEXT]. Denoise the previous text in [SOURCE_LANG] to it equivalent to the following [CONTEXT_LANG] sentence: [CONTEXT]\n[TARGET_TEXT]',
-    'Context in [CONTEXT_LANG]: [CONTEXT]\nFix the following [SOURCE_LANG] text "[SOURCE_TEXT]" to ensure that the meaning is equivalent with the context. [TARGET_TEXT]',
+    '[SOURCE_TEXT]. Denoise the previous [SOURCE_LANG] text to its equivalent sentence in [CONTEXT_LANG]: [CONTEXT]\n[TARGET_TEXT]',
+    'Context in [CONTEXT_LANG]: [CONTEXT]\nFix the following [SOURCE_LANG] text "[SOURCE_TEXT]" ensuring the meaning is equivalent with the context. [TARGET_TEXT]',
     "Context in [CONTEXT_LANG]: [CONTEXT]\nNoisy text in [SOURCE_LANG]: [SOURCE_TEXT]\nHow would you fix the [SOURCE_LANG] sentence to make the meaning the same as the context? [TARGET_TEXT]",
-    '[SOURCE_TEXT]. Denoise the previous text in [SOURCE_LANG] to it equivalent to the following sentence: [CONTEXT]\n[TARGET_TEXT]',
-    'Context: [CONTEXT]\nFix the following [SOURCE_LANG] text "[SOURCE_TEXT]" to ensure that the meaning is equivalent with the context. [TARGET_TEXT]',
+    '[SOURCE_TEXT]. Denoise the previous [SOURCE_LANG] sentence to it equivalent sentence: [CONTEXT]\n[TARGET_TEXT]',
+    'Context: [CONTEXT]\nFix the following [SOURCE_LANG] text "[SOURCE_TEXT]" ensuring the meaning is equivalent with the context. [TARGET_TEXT]',
     "Context: [CONTEXT]\nNoisy text in [SOURCE_LANG]: [SOURCE_TEXT]\nHow would you fix the [SOURCE_LANG] sentence to make the meaning the same as the [CONTEXT_LANG] sentence? [TARGET_TEXT]",
 ]
 

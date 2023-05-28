@@ -136,12 +136,13 @@ lang_map = {
 
 def load_rehearsal_dataset(n_samples=1000, random_seed=42):
     en_dset = datasets.load_dataset('bigscience/xP3', 'en', split='train', streaming=True)
-    id_dset = datasets.load_dataset('bigscience/xP3', 'id', split='train', streaming=True)
+    # id_dset = datasets.load_dataset('bigscience/xP3', 'id', split='train', streaming=True)
 
-    sample_en_dset = en_dset.shuffle(random_seed).take(n_samples // 2)
-    sample_id_dset = id_dset.shuffle(random_seed).take(n_samples // 2)
+    sample_en_dset = en_dset.shuffle(random_seed).take(n_samples)
+    # sample_id_dset = id_dset.shuffle(random_seed).take(n_samples)
     
-    return (sample_en_dset, sample_id_dset)
+    # return datasets.concatenate_datasets([sample_en_dset, sample_id_dset])
+    return sample_en_dset
 
 def load_flores_datasets(pivot_langs=['eng_Latn'], augmentation='multilingual'):
     def inject_lang(row, lang1, lang2):

@@ -230,7 +230,8 @@ def main():
     set_seed(training_args.seed)
 
     # Load the datasets
-    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn', 'ind_Latn'], augmentation=data_args.augmentation_type)
+    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn'], augmentation=data_args.augmentation_type)
+    # raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn', 'ind_Latn'], augmentation=data_args.augmentation_type)
 
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
@@ -256,8 +257,8 @@ def main():
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
-            device_map='auto',
-            load_in_8bit=True
+            # device_map='auto',
+            # load_in_8bit=True
         )
     else:
         model = AutoModelForCausalLM.from_pretrained(
@@ -267,30 +268,39 @@ def main():
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
-            device_map='auto',
-            load_in_8bit=True
+            # device_map='auto',
+            # load_in_8bit=True
         )
-    def count_parameters(model):
-        return sum(p.numel() for p in model.parameters() if p.requires_grad)
+        
+#     def count_parameters(model):
+#         return sum(p.numel() for p in model.parameters() if p.requires_grad)
     
-    print('B4', count_parameters(model))
-    layer_norm_names = ["layer_norm"]
-    for name, param in model.named_parameters():
-        # cast layer norm in fp32 for stability for 8bit models
-        if param.ndim == 1 and any(layer_norm_name in name for layer_norm_name in layer_norm_names):
-            param.data = param.data.to(torch.float32)
-    print('A4', count_parameters(model))
+#     print('B4', count_parameters(model))
+#     layer_norm_names = ["layer_norm"]
+#     for name, param in model.named_parameters():
+#         # cast layer norm in fp32 for stability for 8bit models
+#         if param.ndim == 1 and any(layer_norm_name in name for layer_norm_name in layer_norm_names):
+#             param.data = param.data.to(torch.float32)
+#     print('A4', count_parameters(model))
     
-    output_embedding_layer_name = 'lm_head'
-    if hasattr(model, output_embedding_layer_name):
-        output_embedding_layer = getattr(model, output_embedding_layer_name)
-        input_dtype = output_embedding_layer.weight.dtype
-
-        class CastOutputToFloat(torch.nn.Sequential):
-            def forward(self, x):
-                return super().forward(x.to(input_dtype)).to(torch.float32)
-
-        setattr(model, output_embedding_layer_name, CastOutputToFloat(output_embedding_layer))
+#     # For backward compatibility
+#     if hasattr(model, "enable_input_require_grads"):
+#         model.enable_input_require_grads()
+#     else:
+#         def make_inputs_require_grad(module, input, output):
+#             output.requires_grad_(True)
+#         model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+#     # enable gradient checkpointing for memory efficiency
+#     model.gradient_checkpointing_enable()
+    
+#     output_embedding_layer_name = 'lm_head'
+#     if hasattr(model, output_embedding_layer_name):
+#         output_embedding_layer = getattr(model, output_embedding_layer_name)
+#         input_dtype = output_embedding_layer.weight.dtype
+#         class CastOutputToFloat(torch.nn.Sequential):
+#             def forward(self, x):
+#                 return super().forward(x.to(input_dtype)).to(torch.float32)
+#         setattr(model, output_embedding_layer_name, CastOutputToFloat(output_embedding_layer))
 
     # Preprocessing the datasets.
     # We need to tokenize inputs and targets.
@@ -299,12 +309,16 @@ def main():
     # Handle Continual Flag
     if data_args.continual_type is not None:
         # Append training data with rehearsal
-        (sample_en_dset, sample_id_dset) = load_rehearsal_dataset(n_samples=data_args.continual_size, random_seed=training_args.seed)
-        raw_datasets["train"] = datasets.interleave_datasets([
-            datasets.Dataset.from_list(list(sample_en_dset)), datasets.Dataset.from_list(list(sample_id_dset)), raw_datasets["train"]
-        ], stopping_strategy='all_exhausted')
+        # (sample_en_dset, sample_id_dset) = load_rehearsal_dataset(n_samples=data_args.continual_size, random_seed=training_args.seed)
+        # raw_datasets["train"] = datasets.interleave_datasets([
+        #     datasets.Dataset.from_list(list(sample_en_dset)), datasets.Dataset.from_list(list(sample_id_dset)), raw_datasets["train"]
+        # ], stopping_strategy='all_exhausted')
+        sample_dset = load_rehearsal_dataset(n_samples=data_args.continual_size, random_seed=training_args.seed)
+        sample_dset = datasets.Dataset.from_list(list(sample_dset))
+        
+        raw_datasets["train"] = datasets.interleave_datasets([sample_dset, raw_datasets["train"]], stopping_strategy='all_exhausted')
 
-    def self_prompt(sent1, sent2, lang1, lang2, is_encoder_decoder, augmentation_type):
+    def self_prompt(sent1, sent2, lang1, lang2, augmentation_type, is_encoder_decoder):
         # Random Choice
         if augmentation_type == 'random':
             augmentation_type = random.choice(['monolingual', 'translation', 'bilingual'])
@@ -418,11 +432,15 @@ def main():
         if 'inputs' not in examples.keys():
             examples['inputs'] = [None for _ in range(len(examples["sentence1"]))]
             examples['targets'] = [None for _ in range(len(examples["sentence1"]))]
+            print('INPUTS not in example')
+            print(examples["inputs"])
         elif 'sentence1' not in examples.keys():
             examples['sentence1'] = [None for _ in range(len(examples["inputs"]))]
             examples['sentence2'] = [None for _ in range(len(examples["inputs"]))]
             examples['lang1'] = [None for _ in range(len(examples["inputs"]))]
             examples['lang2'] = [None for _ in range(len(examples["inputs"]))]
+            print('SENT1 not in example')
+            print(examples["inputs"])
         
         input_data = []
         for inputs, targets, sent1, sent2, lang1, lang2 in zip(
@@ -432,8 +450,7 @@ def main():
             if inputs is None:
                 # Build Prompt
                 input_data = []
-                for s1, s2, l1, l2 in zip(sent1, sent2, lang1, lang2):
-                    input_data.append(self_prompt(s1, s2, l1, l2, is_encoder_decoder, augmentation_type))
+                input_data.append(self_prompt(sent1, sent2, lang1, lang2, augmentation_type, is_encoder_decoder))
             else:
                 # Use xP3 Prompt data
                 if is_encoder_decoder:
@@ -452,7 +469,8 @@ def main():
             ]
             model_inputs["labels"] = labels["input_ids"]
         else:
-            inputs = input_data[0]
+            inputs = list(map(lambda x: x[0], input_data))
+            print(inputs)
             model_inputs = tokenizer(inputs, max_length=data_args.max_source_length, padding=False, truncation=True)
         return model_inputs
 
