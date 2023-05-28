@@ -1,3 +1,4 @@
+# # Monolingual
 # TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
 #     --model_name_or_path bigscience/bloomz-560m \
 #     --do_train \
@@ -21,6 +22,7 @@
 #     --sharded_ddp zero_dp_3 \
 #     --report_to tensorboard
 
+# # Translation
 # TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
 #     --model_name_or_path bigscience/bloomz-560m \
 #     --do_train \
@@ -44,6 +46,7 @@
 #     --sharded_ddp zero_dp_3 \
 #     --report_to tensorboard
 
+# # Bilingual
 # TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
 #     --model_name_or_path bigscience/bloomz-560m \
 #     --do_train \
@@ -67,6 +70,7 @@
 #     --sharded_ddp zero_dp_3 \
 #     --report_to tensorboard 
 
+# # Pair
 # TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
 #     --model_name_or_path bigscience/bloomz-560m \
 #     --do_train \
@@ -90,6 +94,7 @@
 #     --sharded_ddp zero_dp_3 \
 #     --report_to tensorboard 
 
+# # Random
 # TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
 #     --model_name_or_path bigscience/bloomz-560m \
 #     --do_train \
@@ -113,8 +118,117 @@
 #     --sharded_ddp zero_dp_3 \
 #     --report_to tensorboard 
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
-    --model_name_or_path bigscience/bloomz-560m \
+# ###
+# # Rehearsal 
+# ###
+
+# # Rehearsal 100
+# TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-560m \
+#     --do_train \
+#     --max_steps 48700 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 974 \
+#     --save_strategy steps \
+#     --save_steps 9740 \
+#     --save_total_limit 5 \
+#     --output_dir ./save/pair/bloomz-560m_R-100 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 8 \
+#     --dataloader_num_workers 8 \
+#     --per_device_train_batch_size 4 \
+#     --per_device_eval_batch_size 4 \
+#     --overwrite_output_dir \
+#     --augmentation_type pair \
+#     --continual_type rehearsal \
+#     --continual_size 100 \
+#     --fp16 \
+#     --sharded_ddp zero_dp_3 \
+#     --report_to tensorboard 
+
+# # Rehearsal 1000
+# TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-560m \
+#     --do_train \
+#     --max_steps 48700 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 974 \
+#     --save_strategy steps \
+#     --save_steps 9740 \
+#     --save_total_limit 5 \
+#     --output_dir ./save/pair/bloomz-560m_R-1000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 8 \
+#     --dataloader_num_workers 8 \
+#     --per_device_train_batch_size 4 \
+#     --per_device_eval_batch_size 4 \
+#     --overwrite_output_dir \
+#     --augmentation_type pair \
+#     --continual_type rehearsal \
+#     --continual_size 1000 \
+#     --fp16 \
+#     --sharded_ddp zero_dp_3 \
+#     --report_to tensorboard 
+
+# # Rehearsal 10000
+# TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-560m \
+#     --do_train \
+#     --max_steps 48700 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 974 \
+#     --save_strategy steps \
+#     --save_steps 9740 \
+#     --save_total_limit 5 \
+#     --output_dir ./save/pair/bloomz-560m_R-10000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 8 \
+#     --dataloader_num_workers 8 \
+#     --per_device_train_batch_size 4 \
+#     --per_device_eval_batch_size 4 \
+#     --overwrite_output_dir \
+#     --augmentation_type pair \
+#     --continual_type rehearsal \
+#     --continual_size 10000 \
+#     --fp16 \
+#     --sharded_ddp zero_dp_3 \
+#     --report_to tensorboard 
+
+
+###
+# Larger Model
+###
+# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-1b1 \
+#     --do_train \
+#     --max_steps 48700 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 974 \
+#     --save_strategy steps \
+#     --save_steps 9740 \
+#     --save_total_limit 6 \
+#     --output_dir ./save/pair/bloomz-1b1 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 16 \
+#     --dataloader_num_workers 16 \
+#     --per_device_train_batch_size 32 \
+#     --per_device_eval_batch_size 32 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type pair \
+#     --fp16 \
+#     --report_to tensorboard
+
+CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+    --model_name_or_path bigscience/bloomz-1b1 \
     --do_train \
     --max_steps 48700 \
     --logging_strategy steps \
@@ -123,68 +237,69 @@ TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch
     --eval_steps 974 \
     --save_strategy steps \
     --save_steps 9740 \
-    --save_total_limit 5 \
-    --output_dir ./save/pair/bloomz-560m_R-100 \
+    --save_total_limit 6 \
+    --output_dir ./save/pair/bloomz-1b1_R-100 \
     --learning_rate 1e-5 \
-    --preprocessing_num_workers 8 \
-    --dataloader_num_workers 8 \
-    --per_device_train_batch_size 2 \
-    --per_device_eval_batch_size 2 \
-    --gradient_accumulation_steps 2 \
+    --preprocessing_num_workers 16 \
+    --dataloader_num_workers 16 \
+    --per_device_train_batch_size 32 \
+    --per_device_eval_batch_size 32 \
+    --gradient_checkpointing \
     --overwrite_output_dir \
     --augmentation_type pair \
     --continual_type rehearsal \
     --continual_size 100 \
     --fp16 \
-    --sharded_ddp zero_dp_3 \
     --report_to tensorboard 
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
-    --model_name_or_path bigscience/bloomz-560m \
-    --do_train \
-    --max_steps 48700 \
-    --logging_strategy steps \
-    --logging_steps 10 \
-    --evaluation_strategy steps \
-    --eval_steps 974 \
-    --save_strategy steps \
-    --save_steps 9740 \
-    --save_total_limit 5 \
-    --output_dir ./save/pair/bloomz-560m_R-1000 \
-    --learning_rate 1e-5 \
-    --preprocessing_num_workers 8 \
-    --dataloader_num_workers 8 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
-    --overwrite_output_dir \
-    --augmentation_type pair \
-    --continual_type rehearsal \
-    --continual_size 1000 \
-    --fp16 \
-    --sharded_ddp zero_dp_3 \
-    --report_to tensorboard 
+# CUDA_VISIBLE_DEVICES=1 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-1b1 \
+#     --do_train \
+#     --max_steps 48700 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 974 \
+#     --save_strategy steps \
+#     --save_steps 9740 \
+#     --save_total_limit 6 \
+#     --output_dir ./save/pair/bloomz-1b1_R-1000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 8 \
+#     --dataloader_num_workers 8 \
+#     --per_device_train_batch_size 16 \
+#     --per_device_eval_batch_size 16 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type pair \
+#     --continual_type rehearsal \
+#     --continual_size 1000 \
+#     --fp16 \
+#     --sharded_ddp zero_dp_3 \
+#     --report_to tensorboard 
 
-TOKENIZERS_PARALLELISM=true CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 run_t2t_finetuning.py \
-    --model_name_or_path bigscience/bloomz-560m \
-    --do_train \
-    --max_steps 48700 \
-    --logging_strategy steps \
-    --logging_steps 10 \
-    --evaluation_strategy steps \
-    --eval_steps 974 \
-    --save_strategy steps \
-    --save_steps 9740 \
-    --save_total_limit 5 \
-    --output_dir ./save/pair/bloomz-560m_R-10000 \
-    --learning_rate 1e-5 \
-    --preprocessing_num_workers 8 \
-    --dataloader_num_workers 8 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
-    --overwrite_output_dir \
-    --augmentation_type pair \
-    --continual_type rehearsal \
-    --continual_size 10000 \
-    --fp16 \
-    --sharded_ddp zero_dp_3 \
-    --report_to tensorboard 
+# CUDA_VISIBLE_DEVICES=1 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-1b1 \
+#     --do_train \
+#     --max_steps 48700 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 974 \
+#     --save_strategy steps \
+#     --save_steps 9740 \
+#     --save_total_limit 6 \
+#     --output_dir ./save/pair/bloomz-1b1_R-10000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 8 \
+#     --dataloader_num_workers 8 \
+#     --per_device_train_batch_size 16 \
+#     --per_device_eval_batch_size 16 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type pair \
+#     --continual_type rehearsal \
+#     --continual_size 10000 \
+#     --fp16 \
+#     --sharded_ddp zero_dp_3 \
+#     --report_to tensorboard 

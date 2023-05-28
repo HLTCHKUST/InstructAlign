@@ -27,6 +27,7 @@ import random
 
 import numpy as np
 import pandas as pd
+import torch
 
 import transformers
 from transformers import (
@@ -43,7 +44,7 @@ from transformers import (
     default_data_collator,
     set_seed,
 )
-
+from peft import prepare_model_for_int8_training
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version
 from transformers.utils.versions import require_version
@@ -51,7 +52,7 @@ import datasets
 
 from data_utils import load_flores_datasets, load_rehearsal_dataset
 from augmentation_utils import do_augment
-from prompt_utils import prompt_monolingual, prompt_translation, prompt_bilingual
+from prompt_utils import prompt_monolingual, prompt_translation, prompt_xss, prompt_bilingual
 
 logger = logging.getLogger(__name__)
 
@@ -255,8 +256,8 @@ def main():
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
-            # device_map='auto',
-            # load_in_8bit=True
+            device_map='auto',
+            load_in_8bit=True
         )
     else:
         model = AutoModelForCausalLM.from_pretrained(
@@ -266,9 +267,30 @@ def main():
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             use_auth_token=True if model_args.use_auth_token else None,
-            # device_map='auto',
-            # load_in_8bit=True
+            device_map='auto',
+            load_in_8bit=True
         )
+    def count_parameters(model):
+        return sum(p.numel() for p in model.parameters() if p.requires_grad)
+    
+    print('B4', count_parameters(model))
+    layer_norm_names = ["layer_norm"]
+    for name, param in model.named_parameters():
+        # cast layer norm in fp32 for stability for 8bit models
+        if param.ndim == 1 and any(layer_norm_name in name for layer_norm_name in layer_norm_names):
+            param.data = param.data.to(torch.float32)
+    print('A4', count_parameters(model))
+    
+    output_embedding_layer_name = 'lm_head'
+    if hasattr(model, output_embedding_layer_name):
+        output_embedding_layer = getattr(model, output_embedding_layer_name)
+        input_dtype = output_embedding_layer.weight.dtype
+
+        class CastOutputToFloat(torch.nn.Sequential):
+            def forward(self, x):
+                return super().forward(x.to(input_dtype)).to(torch.float32)
+
+        setattr(model, output_embedding_layer_name, CastOutputToFloat(output_embedding_layer))
 
     # Preprocessing the datasets.
     # We need to tokenize inputs and targets.
