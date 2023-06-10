@@ -5,13 +5,13 @@ import glob
 
 """ NusaCrowd Datasets """
 TEXT_CLASSIFICATION_TASKS = [
-    # Monolongual Senti, Emot, NLI 
-    'emot_nusantara_text',
-    'imdb_jv_nusantara_text',
-    'indolem_sentiment_nusantara_text',
-    'smsa_nusantara_text',    
-    'indonli_nusantara_pairs',
-    'su_emot_nusantara_text',
+    # # Monolongual Senti, Emot, NLI 
+    # 'emot_nusantara_text',
+    # 'imdb_jv_nusantara_text',
+    # 'indolem_sentiment_nusantara_text',
+    # 'smsa_nusantara_text',    
+    # 'indonli_nusantara_pairs',
+    # 'su_emot_nusantara_text',
     
     # NusaX Sentiment
     'nusax_senti_ace_nusantara_text',
@@ -37,19 +37,19 @@ def load_nlu_tasks():
 
 """ NusaMenulis Datasets """
 NUSA_MENULIS_TASKS = [
-    # Nusa Kalimat Emot
-    ('nusa_kalimat','emot','abs'),
-    ('nusa_kalimat','emot','bew'),
-    ('nusa_kalimat','emot','bhp'),
-    ('nusa_kalimat','emot','btk'),
-    ('nusa_kalimat','emot','jav'),
-    ('nusa_kalimat','emot','mad'),
-    ('nusa_kalimat','emot','mak'),
-    ('nusa_kalimat','emot','min'),
-    ('nusa_kalimat','emot','mui'),
-    ('nusa_kalimat','emot','rej'),
-    ('nusa_kalimat','emot','sun'),
-    
+#     # Nusa Kalimat Emot
+#     ('nusa_kalimat','emot','abs'),
+#     ('nusa_kalimat','emot','bew'),
+#     ('nusa_kalimat','emot','bhp'),
+#     ('nusa_kalimat','emot','btk'),
+#     ('nusa_kalimat','emot','jav'),
+#     ('nusa_kalimat','emot','mad'),
+#     ('nusa_kalimat','emot','mak'),
+#     ('nusa_kalimat','emot','min'),
+#     ('nusa_kalimat','emot','mui'),
+#     ('nusa_kalimat','emot','rej'),
+#     ('nusa_kalimat','emot','sun'),
+   
     # Nusa Kalimat Senti
     ('nusa_kalimat','senti','abs'),
     ('nusa_kalimat','senti','bew'),
@@ -63,17 +63,17 @@ NUSA_MENULIS_TASKS = [
     ('nusa_kalimat','senti','rej'),
     ('nusa_kalimat','senti','sun'),
 
-#     # Nusa Alinea Emot
-#     ('nusa_alinea','emot','bew'),
-#     ('nusa_alinea','emot','btk'),
-#     ('nusa_alinea','emot','bug'),
-#     ('nusa_alinea','emot','jav'),
-#     ('nusa_alinea','emot','mad'),
-#     ('nusa_alinea','emot','mak'),
-#     ('nusa_alinea','emot','min'),
-#     ('nusa_alinea','emot','mui'),
-#     ('nusa_alinea','emot','rej'),
-#     ('nusa_alinea','emot','sun'),
+    # Nusa Alinea Emot
+    ('nusa_alinea','emot','bew'),
+    ('nusa_alinea','emot','btk'),
+    ('nusa_alinea','emot','bug'),
+    ('nusa_alinea','emot','jav'),
+    ('nusa_alinea','emot','mad'),
+    ('nusa_alinea','emot','mak'),
+    ('nusa_alinea','emot','min'),
+    ('nusa_alinea','emot','mui'),
+    ('nusa_alinea','emot','rej'),
+    ('nusa_alinea','emot','sun'),
 
 #     # Nusa Alinea Paragraph
 #     ('nusa_alinea','paragraph','bew'),

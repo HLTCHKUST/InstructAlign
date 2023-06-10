@@ -112,7 +112,7 @@ class DataTrainingArguments:
         metadata={"help": "The number of processes to use for the preprocessing."},
     )
     max_source_length: Optional[int] = field(
-        default=256,
+        default=128,
         metadata={
             "help": (
                 "The maximum total input sequence length after tokenization. Sequences longer "
@@ -121,7 +121,7 @@ class DataTrainingArguments:
         },
     )
     max_target_length: Optional[int] = field(
-        default=256,
+        default=128,
         metadata={
             "help": (
                 "The maximum total sequence length for target text after tokenization. Sequences longer "
@@ -272,35 +272,9 @@ def main():
             # load_in_8bit=True
         )
         
-#     def count_parameters(model):
-#         return sum(p.numel() for p in model.parameters() if p.requires_grad)
-    
-#     print('B4', count_parameters(model))
-#     layer_norm_names = ["layer_norm"]
-#     for name, param in model.named_parameters():
-#         # cast layer norm in fp32 for stability for 8bit models
-#         if param.ndim == 1 and any(layer_norm_name in name for layer_norm_name in layer_norm_names):
-#             param.data = param.data.to(torch.float32)
-#     print('A4', count_parameters(model))
-    
-#     # For backward compatibility
-#     if hasattr(model, "enable_input_require_grads"):
-#         model.enable_input_require_grads()
-#     else:
-#         def make_inputs_require_grad(module, input, output):
-#             output.requires_grad_(True)
-#         model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-#     # enable gradient checkpointing for memory efficiency
-#     model.gradient_checkpointing_enable()
-    
-#     output_embedding_layer_name = 'lm_head'
-#     if hasattr(model, output_embedding_layer_name):
-#         output_embedding_layer = getattr(model, output_embedding_layer_name)
-#         input_dtype = output_embedding_layer.weight.dtype
-#         class CastOutputToFloat(torch.nn.Sequential):
-#             def forward(self, x):
-#                 return super().forward(x.to(input_dtype)).to(torch.float32)
-#         setattr(model, output_embedding_layer_name, CastOutputToFloat(output_embedding_layer))
+    def count_parameters(model):
+        return sum(p.numel() for p in model.parameters() if p.requires_grad)    
+    print('Model size: ', count_parameters(model))
 
     # Preprocessing the datasets.
     # We need to tokenize inputs and targets.
@@ -322,10 +296,14 @@ def main():
         # Random Choice
         if augmentation_type == 'random':
             augmentation_type = random.choice(['monolingual', 'translation', 'bilingual'])
+        elif augmentation_type == 'random-xss':
+            augmentation_type = random.choice(['monolingual', 'translation', 'bilingual', 'xss'])
         elif augmentation_type == 'pair':
             augmentation_type = random.choice(['translation', 'bilingual'])
-        elif augmentation_type == 'pair+xss':
+        elif augmentation_type == 'pair-xss':
             augmentation_type = random.choice(['translation', 'bilingual', 'xss'])
+        elif augmentation_type == 'bilingual-xss':
+            augmentation_type = random.choice(['bilingual', 'xss'])
             
         if augmentation_type == 'monolingual':
             rand_proba = random.random()            
@@ -432,15 +410,11 @@ def main():
         if 'inputs' not in examples.keys():
             examples['inputs'] = [None for _ in range(len(examples["sentence1"]))]
             examples['targets'] = [None for _ in range(len(examples["sentence1"]))]
-            print('INPUTS not in example')
-            print(examples["inputs"])
         elif 'sentence1' not in examples.keys():
             examples['sentence1'] = [None for _ in range(len(examples["inputs"]))]
             examples['sentence2'] = [None for _ in range(len(examples["inputs"]))]
             examples['lang1'] = [None for _ in range(len(examples["inputs"]))]
             examples['lang2'] = [None for _ in range(len(examples["inputs"]))]
-            print('SENT1 not in example')
-            print(examples["inputs"])
         
         input_data = []
         for inputs, targets, sent1, sent2, lang1, lang2 in zip(
@@ -489,8 +463,8 @@ def main():
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=train_dataset if training_args.do_train else None,
-        eval_dataset=eval_dataset if training_args.do_eval else None,
+        train_dataset=train_dataset,
+        eval_dataset=eval_dataset,
         tokenizer=tokenizer,
         data_collator=collator
     )

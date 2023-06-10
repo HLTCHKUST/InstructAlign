@@ -1,6 +1,8 @@
 SENTIMENT_ID = '[INPUT]\nApakah sentimen dari teks tersebut? [OPTIONS]? [LABELS_CHOICE]'
 EMOT_ID = '[INPUT]\nApakah emosi dari teks diatas? [OPTIONS]? [LABELS_CHOICE]'
 NLI_ID = '[INPUT_A]\nBerdasarkan kutipan sebelumnya, apakah benar bahwa "[INPUT_B]"? [OPTIONS]? [LABELS_CHOICE]'
+TOPIC_ID = '[INPUT]\nApakah topik dari teks diatas? [OPTIONS]? [LABELS_CHOICE]'
+
 DATA_TO_ID_PROMPT = {
     'emot_nusantara_text': EMOT_ID,
     'imdb_jv_nusantara_text': SENTIMENT_ID,
@@ -45,11 +47,34 @@ DATA_TO_ID_PROMPT = {
     'nusa_kalimat_senti_mui': SENTIMENT_ID,
     'nusa_kalimat_senti_rej': SENTIMENT_ID,
     'nusa_kalimat_senti_sun': SENTIMENT_ID,
+    
+    'nusa_alinea_emot_bew': EMOT_ID,
+    'nusa_alinea_emot_btk': EMOT_ID,
+    'nusa_alinea_emot_bug': EMOT_ID,
+    'nusa_alinea_emot_jav': EMOT_ID,
+    'nusa_alinea_emot_mad': EMOT_ID,
+    'nusa_alinea_emot_mak': EMOT_ID,
+    'nusa_alinea_emot_min': EMOT_ID,
+    'nusa_alinea_emot_mui': EMOT_ID,
+    'nusa_alinea_emot_rej': EMOT_ID,
+    'nusa_alinea_emot_sun': EMOT_ID,
+    
+    'nusa_alinea_topic_bew': TOPIC_ID,
+    'nusa_alinea_topic_btk': TOPIC_ID,
+    'nusa_alinea_topic_bug': TOPIC_ID,
+    'nusa_alinea_topic_jav': TOPIC_ID,
+    'nusa_alinea_topic_mad': TOPIC_ID,
+    'nusa_alinea_topic_mak': TOPIC_ID,
+    'nusa_alinea_topic_min': TOPIC_ID,
+    'nusa_alinea_topic_mui': TOPIC_ID,
+    'nusa_alinea_topic_rej': TOPIC_ID,
+    'nusa_alinea_topic_sun': TOPIC_ID,
 }
 
 SENTIMENT_ID2 = "Apakah sentimen dari teks berikut?\nTeks: [INPUT]\nJawab dengan [OPTIONS]: [LABELS_CHOICE]"
 EMOT_ID2 = 'Apakah emosi dari teks ini?\nTeks: [INPUT]\nJawab dengan [OPTIONS]: [LABELS_CHOICE]'
 NLI_ID2 = '[INPUT_A]\nBerdasarkan kutipan sebelumnya, apakah benar bahwa "[INPUT_B]"? [OPTIONS]? [LABELS_CHOICE]'
+TOPIC_ID2 = 'Apakah topik dari teks berikut?\nTeks: [INPUT]\nJawab dengan [OPTIONS]: [LABELS_CHOICE]'
 DATA_TO_ID2_PROMPT = {
     'emot_nusantara_text': EMOT_ID2,
     'imdb_jv_nusantara_text': SENTIMENT_ID2,
@@ -94,11 +119,34 @@ DATA_TO_ID2_PROMPT = {
     'nusa_kalimat_senti_mui': SENTIMENT_ID2,
     'nusa_kalimat_senti_rej': SENTIMENT_ID2,
     'nusa_kalimat_senti_sun': SENTIMENT_ID2,
+    
+    'nusa_alinea_emot_bew': EMOT_ID2,
+    'nusa_alinea_emot_btk': EMOT_ID2,
+    'nusa_alinea_emot_bug': EMOT_ID2,
+    'nusa_alinea_emot_jav': EMOT_ID2,
+    'nusa_alinea_emot_mad': EMOT_ID2,
+    'nusa_alinea_emot_mak': EMOT_ID2,
+    'nusa_alinea_emot_min': EMOT_ID2,
+    'nusa_alinea_emot_mui': EMOT_ID2,
+    'nusa_alinea_emot_rej': EMOT_ID2,
+    'nusa_alinea_emot_sun': EMOT_ID2,
+    
+    'nusa_alinea_topic_bew': TOPIC_ID2,
+    'nusa_alinea_topic_btk': TOPIC_ID2,
+    'nusa_alinea_topic_bug': TOPIC_ID2,
+    'nusa_alinea_topic_jav': TOPIC_ID2,
+    'nusa_alinea_topic_mad': TOPIC_ID2,
+    'nusa_alinea_topic_mak': TOPIC_ID2,
+    'nusa_alinea_topic_min': TOPIC_ID2,
+    'nusa_alinea_topic_mui': TOPIC_ID2,
+    'nusa_alinea_topic_rej': TOPIC_ID2,
+    'nusa_alinea_topic_sun': TOPIC_ID2,
 }
 
 SENTIMENT_ID3 =  'Teks: [INPUT]\n\nTolong prediksikan sentimen dari teks diatas. Jawab dengan [OPTIONS]: [LABELS_CHOICE]'
 EMOT_ID3 = 'Teks: [INPUT]\n\nTolong prediksikan emosi dari teks diatas. Jawab dengan [OPTIONS]: [LABELS_CHOICE]'
 NLI_ID3 = 'Diberikan [INPUT_A]. Apakah kalimat tersebut sesuai dengan [INPUT_B]? [OPTIONS]? [LABELS_CHOICE]'
+TOPIC_ID3 = 'Teks: [INPUT]\n\nTolong prediksikan topik dari teks diatas. Jawab dengan [OPTIONS]: [LABELS_CHOICE]'
 DATA_TO_ID3_PROMPT = {
     'emot_nusantara_text': EMOT_ID3,
     'imdb_jv_nusantara_text': SENTIMENT_ID3,
@@ -143,12 +191,34 @@ DATA_TO_ID3_PROMPT = {
     'nusa_kalimat_senti_mui': SENTIMENT_ID3,
     'nusa_kalimat_senti_rej': SENTIMENT_ID3,
     'nusa_kalimat_senti_sun': SENTIMENT_ID3,
+    
+    'nusa_alinea_emot_bew': EMOT_ID3,
+    'nusa_alinea_emot_btk': EMOT_ID3,
+    'nusa_alinea_emot_bug': EMOT_ID3,
+    'nusa_alinea_emot_jav': EMOT_ID3,
+    'nusa_alinea_emot_mad': EMOT_ID3,
+    'nusa_alinea_emot_mak': EMOT_ID3,
+    'nusa_alinea_emot_min': EMOT_ID3,
+    'nusa_alinea_emot_mui': EMOT_ID3,
+    'nusa_alinea_emot_rej': EMOT_ID3,
+    'nusa_alinea_emot_sun': EMOT_ID3,
+    
+    'nusa_alinea_topic_bew': TOPIC_ID3,
+    'nusa_alinea_topic_btk': TOPIC_ID3,
+    'nusa_alinea_topic_bug': TOPIC_ID3,
+    'nusa_alinea_topic_jav': TOPIC_ID3,
+    'nusa_alinea_topic_mad': TOPIC_ID3,
+    'nusa_alinea_topic_mak': TOPIC_ID3,
+    'nusa_alinea_topic_min': TOPIC_ID3,
+    'nusa_alinea_topic_mui': TOPIC_ID3,
+    'nusa_alinea_topic_rej': TOPIC_ID3,
+    'nusa_alinea_topic_sun': TOPIC_ID3,
 }
 
 SENTIMENT_EN = "[INPUT]\nWhat would be the sentiment of the text above? [OPTIONS]? [LABELS_CHOICE]"
 EMOT_EN = '[INPUT]\nWhat would be the emotion of the text above? [OPTIONS]? [LABELS_CHOICE]'
 NLI_EN = '[INPUT_A]\nBased on the previous passage, is it true that "[INPUT_B]"? [OPTIONS]? [LABELS_CHOICE]'
-
+TOPIC_EN = '[INPUT]\nWhat would be the topic of the text above? [OPTIONS]? [LABELS_CHOICE]'
 DATA_TO_EN_PROMPT = {
     'emot_nusantara_text': EMOT_EN,
     'imdb_jv_nusantara_text': SENTIMENT_EN,
@@ -193,6 +263,28 @@ DATA_TO_EN_PROMPT = {
     'nusa_kalimat_senti_mui': SENTIMENT_EN,
     'nusa_kalimat_senti_rej': SENTIMENT_EN,
     'nusa_kalimat_senti_sun': SENTIMENT_EN,
+    
+    'nusa_alinea_emot_bew': EMOT_EN,
+    'nusa_alinea_emot_btk': EMOT_EN,
+    'nusa_alinea_emot_bug': EMOT_EN,
+    'nusa_alinea_emot_jav': EMOT_EN,
+    'nusa_alinea_emot_mad': EMOT_EN,
+    'nusa_alinea_emot_mak': EMOT_EN,
+    'nusa_alinea_emot_min': EMOT_EN,
+    'nusa_alinea_emot_mui': EMOT_EN,
+    'nusa_alinea_emot_rej': EMOT_EN,
+    'nusa_alinea_emot_sun': EMOT_EN,
+    
+    'nusa_alinea_topic_bew': TOPIC_EN,
+    'nusa_alinea_topic_btk': TOPIC_EN,
+    'nusa_alinea_topic_bug': TOPIC_EN,
+    'nusa_alinea_topic_jav': TOPIC_EN,
+    'nusa_alinea_topic_mad': TOPIC_EN,
+    'nusa_alinea_topic_mak': TOPIC_EN,
+    'nusa_alinea_topic_min': TOPIC_EN,
+    'nusa_alinea_topic_mui': TOPIC_EN,
+    'nusa_alinea_topic_rej': TOPIC_EN,
+    'nusa_alinea_topic_sun': TOPIC_EN,
 
 	'xnli_ar': NLI_EN, 'xnli_bg': NLI_EN, 'xnli_de': NLI_EN, 'xnli_el': NLI_EN,
 	'xnli_en': NLI_EN, 'xnli_es': NLI_EN, 'xnli_fr': NLI_EN, 'xnli_hi': NLI_EN,
@@ -203,6 +295,7 @@ DATA_TO_EN_PROMPT = {
 SENTIMENT_EN2 =  'What is the sentiment of this text?\nText: [INPUT]\nAnswer with [OPTIONS]: [LABELS_CHOICE]'
 EMOT_EN2 = 'What is the emotion of this text?\nText: [INPUT]\nAnswer with [OPTIONS]: [LABELS_CHOICE]'
 NLI_EN2 = '[INPUT_A]\nUsing only the above description and what you know about the world, "[INPUT_B]" is definitely [OPTIONS]? [LABEL_CHOICE]'
+TOPIC_EN2 = 'What is the topic of this text?\nText: [INPUT]\nAnswer with [OPTIONS]: [LABELS_CHOICE]'
 DATA_TO_EN2_PROMPT = {
     'emot_nusantara_text': EMOT_EN2,
     'imdb_jv_nusantara_text': SENTIMENT_EN2,
@@ -247,6 +340,28 @@ DATA_TO_EN2_PROMPT = {
     'nusa_kalimat_senti_mui': SENTIMENT_EN2,
     'nusa_kalimat_senti_rej': SENTIMENT_EN2,
     'nusa_kalimat_senti_sun': SENTIMENT_EN2,
+    
+    'nusa_alinea_emot_bew': EMOT_EN2,
+    'nusa_alinea_emot_btk': EMOT_EN2,
+    'nusa_alinea_emot_bug': EMOT_EN2,
+    'nusa_alinea_emot_jav': EMOT_EN2,
+    'nusa_alinea_emot_mad': EMOT_EN2,
+    'nusa_alinea_emot_mak': EMOT_EN2,
+    'nusa_alinea_emot_min': EMOT_EN2,
+    'nusa_alinea_emot_mui': EMOT_EN2,
+    'nusa_alinea_emot_rej': EMOT_EN2,
+    'nusa_alinea_emot_sun': EMOT_EN2,
+    
+    'nusa_alinea_topic_bew': TOPIC_EN2,
+    'nusa_alinea_topic_btk': TOPIC_EN2,
+    'nusa_alinea_topic_bug': TOPIC_EN2,
+    'nusa_alinea_topic_jav': TOPIC_EN2,
+    'nusa_alinea_topic_mad': TOPIC_EN2,
+    'nusa_alinea_topic_mak': TOPIC_EN2,
+    'nusa_alinea_topic_min': TOPIC_EN2,
+    'nusa_alinea_topic_mui': TOPIC_EN2,
+    'nusa_alinea_topic_rej': TOPIC_EN2,
+    'nusa_alinea_topic_sun': TOPIC_EN2,
 
 	'xnli_ar': NLI_EN2, 'xnli_bg': NLI_EN2, 'xnli_de': NLI_EN2, 'xnli_el': NLI_EN2,
 	'xnli_en': NLI_EN2, 'xnli_es': NLI_EN2, 'xnli_fr': NLI_EN2, 'xnli_hi': NLI_EN2,
@@ -257,6 +372,7 @@ DATA_TO_EN2_PROMPT = {
 SENTIMENT_EN3 =  'Text: [INPUT]\n\nPlease classify the sentiment of above text. Answer with [OPTIONS]: [LABELS_CHOICE]'
 EMOT_EN3 = 'Text: [INPUT]\n\nPlease classify the emotion of above text. Answer with [OPTIONS]: [LABELS_CHOICE]'
 NLI_EN3 = 'Given "[INPUT_A]" Should we assume that "[INPUT_B]" is true? [OPTIONS]? [LABEL_CHOICE]'
+TOPIC_EN3 = 'Text: [INPUT]\n\nPlease classify the topic of above text. Answer with [OPTIONS]: [LABELS_CHOICE]'
 DATA_TO_EN3_PROMPT = {
     'emot_nusantara_text': EMOT_EN3,
     'imdb_jv_nusantara_text': SENTIMENT_EN3,
@@ -301,6 +417,28 @@ DATA_TO_EN3_PROMPT = {
     'nusa_kalimat_senti_mui': SENTIMENT_EN3,
     'nusa_kalimat_senti_rej': SENTIMENT_EN3,
     'nusa_kalimat_senti_sun': SENTIMENT_EN3,
+    
+    'nusa_alinea_emot_bew': EMOT_EN3,
+    'nusa_alinea_emot_btk': EMOT_EN3,
+    'nusa_alinea_emot_bug': EMOT_EN3,
+    'nusa_alinea_emot_jav': EMOT_EN3,
+    'nusa_alinea_emot_mad': EMOT_EN3,
+    'nusa_alinea_emot_mak': EMOT_EN3,
+    'nusa_alinea_emot_min': EMOT_EN3,
+    'nusa_alinea_emot_mui': EMOT_EN3,
+    'nusa_alinea_emot_rej': EMOT_EN3,
+    'nusa_alinea_emot_sun': EMOT_EN3,
+    
+    'nusa_alinea_topic_bew': TOPIC_EN3,
+    'nusa_alinea_topic_btk': TOPIC_EN3,
+    'nusa_alinea_topic_bug': TOPIC_EN3,
+    'nusa_alinea_topic_jav': TOPIC_EN3,
+    'nusa_alinea_topic_mad': TOPIC_EN3,
+    'nusa_alinea_topic_mak': TOPIC_EN3,
+    'nusa_alinea_topic_min': TOPIC_EN3,
+    'nusa_alinea_topic_mui': TOPIC_EN3,
+    'nusa_alinea_topic_rej': TOPIC_EN3,
+    'nusa_alinea_topic_sun': TOPIC_EN3,
 
 	'xnli_ar': NLI_EN3, 'xnli_bg': NLI_EN3, 'xnli_de': NLI_EN3, 'xnli_el': NLI_EN3,
 	'xnli_en': NLI_EN3, 'xnli_es': NLI_EN3, 'xnli_fr': NLI_EN3, 'xnli_hi': NLI_EN3,
