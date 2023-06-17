@@ -8,7 +8,7 @@ TEXT_CLASSIFICATION_TASKS = [
     # # Monolongual Senti, Emot, NLI 
     # 'emot_nusantara_text',
     # 'imdb_jv_nusantara_text',
-    # 'indolem_sentiment_nusantara_text',
+    'indolem_sentiment_nusantara_text',
     # 'smsa_nusantara_text',    
     # 'indonli_nusantara_pairs',
     # 'su_emot_nusantara_text',
@@ -37,18 +37,18 @@ def load_nlu_tasks():
 
 """ NusaMenulis Datasets """
 NUSA_MENULIS_TASKS = [
-#     # Nusa Kalimat Emot
-#     ('nusa_kalimat','emot','abs'),
-#     ('nusa_kalimat','emot','bew'),
-#     ('nusa_kalimat','emot','bhp'),
-#     ('nusa_kalimat','emot','btk'),
-#     ('nusa_kalimat','emot','jav'),
-#     ('nusa_kalimat','emot','mad'),
-#     ('nusa_kalimat','emot','mak'),
-#     ('nusa_kalimat','emot','min'),
-#     ('nusa_kalimat','emot','mui'),
-#     ('nusa_kalimat','emot','rej'),
-#     ('nusa_kalimat','emot','sun'),
+    # # Nusa Kalimat Emot
+    # ('nusa_kalimat','emot','abs'),
+    # ('nusa_kalimat','emot','bew'),
+    # ('nusa_kalimat','emot','bhp'),
+    # ('nusa_kalimat','emot','btk'),
+    # ('nusa_kalimat','emot','jav'),
+    # ('nusa_kalimat','emot','mad'),
+    # ('nusa_kalimat','emot','mak'),
+    # ('nusa_kalimat','emot','min'),
+    # ('nusa_kalimat','emot','mui'),
+    # ('nusa_kalimat','emot','rej'),
+    # ('nusa_kalimat','emot','sun'),
    
     # Nusa Kalimat Senti
     ('nusa_kalimat','senti','abs'),

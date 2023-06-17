@@ -564,10 +564,139 @@
 #     --fp16 \
 #     --report_to tensorboard
 
+###
+# Monolingual
+###
+
+# Monolingual Rehearsal 100000
+# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-560m \
+#     --do_train \
+#     --do_eval \
+#     --max_steps 50000 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 1000 \
+#     --save_strategy steps \
+#     --save_steps 10000 \
+#     --save_total_limit 1 \
+#     --output_dir ./save/monolingual/monolingual-bloomz-560m_R-100000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 16 \
+#     --dataloader_num_workers 16 \
+#     --per_device_train_batch_size 16 \
+#     --per_device_eval_batch_size 16 \
+#     --gradient_accumulation_steps 2 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type monolingual \
+#     --continual_type rehearsal \
+#     --continual_size 100000 \
+#     --fp16 \
+#     --report_to tensorboard
+    
+###
+# Translation
+###
+
+# # Translation Rehearsal 100000
+CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+    --model_name_or_path bigscience/bloomz-560m \
+    --do_train \
+    --do_eval \
+    --max_steps 50000 \
+    --logging_strategy steps \
+    --logging_steps 10 \
+    --evaluation_strategy steps \
+    --eval_steps 1000 \
+    --save_strategy steps \
+    --save_steps 10000 \
+    --save_total_limit 1 \
+    --output_dir ./save/translation/translation-bloomz-560m_R-100000 \
+    --learning_rate 1e-5 \
+    --preprocessing_num_workers 16 \
+    --dataloader_num_workers 16 \
+    --per_device_train_batch_size 16 \
+    --per_device_eval_batch_size 16 \
+    --gradient_accumulation_steps 2 \
+    --gradient_checkpointing \
+    --overwrite_output_dir \
+    --augmentation_type translation \
+    --continual_type rehearsal \
+    --continual_size 100000 \
+    --fp16 \
+    --report_to tensorboard
+
 # ###
 # # Larger Model
 # ###
 
+###
+# Monolingual
+###
+
+# # Monolingual Rehearsal 100000
+# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-1b1 \
+#     --do_train \
+#     --do_eval \
+#     --max_steps 50000 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 1000 \
+#     --save_strategy steps \
+#     --save_steps 10000 \
+#     --save_total_limit 1 \
+#     --output_dir ./save/monolingual/monolingual-bloomz-1b1_R-100000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 16 \
+#     --dataloader_num_workers 16 \
+#     --per_device_train_batch_size 8 \
+#     --per_device_eval_batch_size 8 \
+#     --gradient_accumulation_steps 4 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type monolingual \
+#     --continual_type rehearsal \
+#     --continual_size 100000 \
+#     --resume_from_checkpoint ./save/monolingual/monolingual-bloomz-1b1_R-100000/checkpoint-40000 \
+#     --fp16 \
+#     --report_to tensorboard
+
+###
+# Translation
+###
+
+# Translation Rehearsal 100000
+CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+    --model_name_or_path bigscience/bloomz-1b1 \
+    --do_train \
+    --do_eval \
+    --max_steps 50000 \
+    --logging_strategy steps \
+    --logging_steps 10 \
+    --evaluation_strategy steps \
+    --eval_steps 1000 \
+    --save_strategy steps \
+    --save_steps 10000 \
+    --save_total_limit 1 \
+    --output_dir ./save/translation/translation-bloomz-1b1_R-100000 \
+    --learning_rate 1e-5 \
+    --preprocessing_num_workers 16 \
+    --dataloader_num_workers 16 \
+    --per_device_train_batch_size 8 \
+    --per_device_eval_batch_size 8 \
+    --gradient_accumulation_steps 4 \
+    --gradient_checkpointing \
+    --overwrite_output_dir \
+    --augmentation_type translation \
+    --continual_type rehearsal \
+    --continual_size 100000 \
+    --fp16 \
+    --report_to tensorboard
+    
 ###
 # Pair
 ###
@@ -705,179 +834,12 @@
 #     --fp16 \
 #     --report_to tensorboard
 
-###
-# Bilingual
-###
-
-CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
-    --model_name_or_path bigscience/bloomz-1b1 \
-    --do_train \
-    --do_eval \
-    --max_steps 50000 \
-    --logging_strategy steps \
-    --logging_steps 10 \
-    --evaluation_strategy steps \
-    --eval_steps 1000 \
-    --save_strategy steps \
-    --save_steps 100000 \
-    --save_total_limit 1 \
-    --output_dir ./save/bilingual/bilingual-bloomz-1b1_R-100000 \
-    --learning_rate 1e-5 \
-    --preprocessing_num_workers 16 \
-    --dataloader_num_workers 16 \
-    --per_device_train_batch_size 8 \
-    --per_device_eval_batch_size 8 \
-    --gradient_accumulation_steps 4 \
-    --gradient_checkpointing \
-    --overwrite_output_dir \
-    --augmentation_type bilingual \
-    --continual_type rehearsal \
-    --continual_size 100000 \
-    --fp16 \
-    --report_to tensorboard
-
-###
-# XSS
-###
-
-CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
-    --model_name_or_path bigscience/bloomz-1b1 \
-    --do_train \
-    --do_eval \
-    --max_steps 50000 \
-    --logging_strategy steps \
-    --logging_steps 10 \
-    --evaluation_strategy steps \
-    --eval_steps 1000 \
-    --save_strategy steps \
-    --save_steps 100000 \
-    --save_total_limit 1 \
-    --output_dir ./save/xss/xss-bloomz-1b1_R-100000 \
-    --learning_rate 1e-5 \
-    --preprocessing_num_workers 16 \
-    --dataloader_num_workers 16 \
-    --per_device_train_batch_size 8 \
-    --per_device_eval_batch_size 8 \
-    --gradient_accumulation_steps 4 \
-    --gradient_checkpointing \
-    --overwrite_output_dir \
-    --augmentation_type xss \
-    --continual_type rehearsal \
-    --continual_size 100000 \
-    --fp16 \
-    --report_to tensorboard
-
-###
-# Even Larger Model
-###
-# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
-#     --model_name_or_path bigscience/bloomz-1b7 \
-#     --do_train \
-#     --do_eval \
-#     --max_steps 50000 \
-#     --logging_strategy steps \
-#     --logging_steps 10 \
-#     --evaluation_strategy steps \
-#     --eval_steps 1000 \
-#     --save_strategy steps \
-#     --save_steps 10000 \
-#     --save_total_limit 1 \
-#     --output_dir ./save/pair/bloomz-1b7 \
-#     --learning_rate 1e-5 \
-#     --preprocessing_num_workers 16 \
-#     --dataloader_num_workers 16 \
-#     --per_device_train_batch_size 2 \
-#     --per_device_eval_batch_size 2 \
-#     --gradient_accumulation_steps 16 \
-#     --gradient_checkpointing \
-#     --overwrite_output_dir \
-#     --augmentation_type pair \
-#     --fp16 \
-#     --report_to tensorboard
+# ###
+# # Bilingual
+# ###
 
 # CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
-#     --model_name_or_path bigscience/bloomz-1b7 \
-#     --do_train \
-#     --do_eval \
-#     --max_steps 50000 \
-#     --logging_strategy steps \
-#     --logging_steps 10 \
-#     --evaluation_strategy steps \
-#     --eval_steps 1000 \
-#     --save_strategy steps \
-#     --save_steps 10000 \
-#     --save_total_limit 1 \
-#     --output_dir ./save/pair/bloomz-1b7_R-100 \
-#     --learning_rate 1e-5 \
-#     --preprocessing_num_workers 8 \
-#     --dataloader_num_workers 8 \
-#     --per_device_train_batch_size 2 \
-#     --per_device_eval_batch_size 2 \
-#     --gradient_accumulation_steps 16 \
-#     --gradient_checkpointing \
-#     --overwrite_output_dir \
-#     --augmentation_type pair \
-#     --continual_type rehearsal \
-#     --continual_size 100 \
-#     --fp16 \
-#     --report_to tensorboard 
-
-# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
-#     --model_name_or_path bigscience/bloomz-1b7 \
-#     --do_train \
-#     --do_eval \
-#     --max_steps 50000 \
-#     --logging_strategy steps \
-#     --logging_steps 10 \
-#     --evaluation_strategy steps \
-#     --eval_steps 1000 \
-#     --save_strategy steps \
-#     --save_steps 10000 \
-#     --save_total_limit 1 \
-#     --output_dir ./save/pair/bloomz-1b7_R-1000 \
-#     --learning_rate 1e-5 \
-#     --preprocessing_num_workers 8 \
-#     --dataloader_num_workers 8 \
-#     --per_device_train_batch_size 2 \
-#     --per_device_eval_batch_size 2 \
-#     --gradient_accumulation_steps 16 \
-#     --gradient_checkpointing \
-#     --overwrite_output_dir \
-#     --augmentation_type pair \
-#     --continual_type rehearsal \
-#     --continual_size 1000 \
-#     --fp16 \
-#     --report_to tensorboard 
-
-# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
-#     --model_name_or_path bigscience/bloomz-1b7 \
-#     --do_train \
-#     --do_eval \
-#     --max_steps 50000 \
-#     --logging_strategy steps \
-#     --logging_steps 10 \
-#     --evaluation_strategy steps \
-#     --eval_steps 1000 \
-#     --save_strategy steps \
-#     --save_steps 10000 \
-#     --save_total_limit 1 \
-#     --output_dir ./save/pair/bloomz-1b7_R-10000 \
-#     --learning_rate 1e-5 \
-#     --preprocessing_num_workers 8 \
-#     --dataloader_num_workers 8 \
-#     --per_device_train_batch_size 2 \
-#     --per_device_eval_batch_size 2 \
-#     --gradient_accumulation_steps 16 \
-#     --gradient_checkpointing \
-#     --overwrite_output_dir \
-#     --augmentation_type pair \
-#     --continual_type rehearsal \
-#     --continual_size 10000 \
-#     --fp16 \
-#     --report_to tensorboard 
-
-# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
-#     --model_name_or_path bigscience/bloomz-1b7 \
+#     --model_name_or_path bigscience/bloomz-1b1 \
 #     --do_train \
 #     --do_eval \
 #     --max_steps 50000 \
@@ -888,17 +850,102 @@ CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
 #     --save_strategy steps \
 #     --save_steps 100000 \
 #     --save_total_limit 1 \
-#     --output_dir ./save/pair/bloomz-1b7_R-10000 \
+#     --output_dir ./save/bilingual/bilingual-bloomz-1b1_R-10000 \
 #     --learning_rate 1e-5 \
-#     --preprocessing_num_workers 8 \
-#     --dataloader_num_workers 8 \
-#     --per_device_train_batch_size 2 \
-#     --per_device_eval_batch_size 2 \
-#     --gradient_accumulation_steps 16 \
+#     --preprocessing_num_workers 16 \
+#     --dataloader_num_workers 16 \
+#     --per_device_train_batch_size 8 \
+#     --per_device_eval_batch_size 8 \
+#     --gradient_accumulation_steps 4 \
 #     --gradient_checkpointing \
 #     --overwrite_output_dir \
-#     --augmentation_type pair \
+#     --augmentation_type bilingual \
+#     --continual_type rehearsal \
+#     --continual_size 10000 \
+#     --fp16 \
+#     --report_to tensorboard
+
+# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-1b1 \
+#     --do_train \
+#     --do_eval \
+#     --max_steps 50000 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 1000 \
+#     --save_strategy steps \
+#     --save_steps 100000 \
+#     --save_total_limit 1 \
+#     --output_dir ./save/bilingual/bilingual-bloomz-1b1_R-100000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 16 \
+#     --dataloader_num_workers 16 \
+#     --per_device_train_batch_size 8 \
+#     --per_device_eval_batch_size 8 \
+#     --gradient_accumulation_steps 4 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type bilingual \
 #     --continual_type rehearsal \
 #     --continual_size 100000 \
 #     --fp16 \
-#     --report_to tensorboard 
+#     --report_to tensorboard
+
+# ###
+# # XSS
+# ###
+
+# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-1b1 \
+#     --do_train \
+#     --do_eval \
+#     --max_steps 50000 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 1000 \
+#     --save_strategy steps \
+#     --save_steps 100000 \
+#     --save_total_limit 1 \
+#     --output_dir ./save/xss/xss-bloomz-1b1_R-10000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 16 \
+#     --dataloader_num_workers 16 \
+#     --per_device_train_batch_size 8 \
+#     --per_device_eval_batch_size 8 \
+#     --gradient_accumulation_steps 4 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type xss \
+#     --continual_type rehearsal \
+#     --continual_size 10000 \
+#     --fp16 \
+#     --report_to tensorboard
+
+# CUDA_VISIBLE_DEVICES=0 python run_t2t_finetuning.py \
+#     --model_name_or_path bigscience/bloomz-1b1 \
+#     --do_train \
+#     --do_eval \
+#     --max_steps 50000 \
+#     --logging_strategy steps \
+#     --logging_steps 10 \
+#     --evaluation_strategy steps \
+#     --eval_steps 1000 \
+#     --save_strategy steps \
+#     --save_steps 100000 \
+#     --save_total_limit 1 \
+#     --output_dir ./save/xss/xss-bloomz-1b1_R-100000 \
+#     --learning_rate 1e-5 \
+#     --preprocessing_num_workers 16 \
+#     --dataloader_num_workers 16 \
+#     --per_device_train_batch_size 8 \
+#     --per_device_eval_batch_size 8 \
+#     --gradient_accumulation_steps 4 \
+#     --gradient_checkpointing \
+#     --overwrite_output_dir \
+#     --augmentation_type xss \
+#     --continual_type rehearsal \
+#     --continual_size 100000 \
+#     --fp16 \
+#     --report_to tensorboard
