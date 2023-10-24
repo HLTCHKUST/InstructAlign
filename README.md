@@ -1,31 +1,18 @@
 # Instruct-Align
-Teaching Novel Languages to LLMs through Instruction-based Bilingual Alignment
+High-and-Low Resource Language Alignment via Continual Crosslingual Instruction Tuning
 
 ### Research Paper
 This work is part of a series of work on LM adaptability to underrepresented & low-resource languages.
 
-We are still working on to push the work to EMNLP 2023. In the meantime, if you use the existing resource, please consider citing:
+Our paper has been accepted in SEALP workshop in AACL 2023. In the meantime, if you use the existing resource, please consider citing:
 ```
-@inproceedings{aji-etal-2022-one,
-    title = "One Country, 700+ Languages: {NLP} Challenges for Underrepresented Languages and Dialects in {I}ndonesia",
-    author = "Aji, Alham Fikri  and Winata, Genta Indra  and Koto, Fajri  and Cahyawijaya, Samuel  and Romadhony, Ade  and Mahendra, Rahmad  and Kurniawan, Kemal  and Moeljadi, David  and Prasojo, Radityo Eko  and Baldwin, Timothy  and Lau, Jey Han  and Ruder, Sebastian",
-    booktitle = "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
-    month = may,
-    year = "2022",
-    address = "Dublin, Ireland",
-    publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/2022.acl-long.500",
-    doi = "10.18653/v1/2022.acl-long.500",
-    pages = "7226--7249",
-    abstract = "NLP research is impeded by a lack of resources and awareness of the challenges presented by underrepresented languages and dialects. Focusing on the languages spoken in Indonesia, the second most linguistically diverse and the fourth most populous nation of the world, we provide an overview of the current state of NLP research for Indonesia{'}s 700+ languages. We highlight challenges in Indonesian NLP and how these affect the performance of current NLP systems. Finally, we provide general recommendations to help develop NLP technology not only for languages of Indonesia but also other underrepresented languages.",
-}
-
-@misc{
-    adilazuarda2023obscure,
-    title={The Obscure Limitation of Modular Multilingual Language Models},
-    author={Muhammad Farid Adilazuarda and Samuel Cahyawijaya and Ayu Purwarianti},
-    year={2023},
-    url={https://openreview.net/forum?id=zEGstYVHBt}
+@misc{cahyawijaya2023instructalign,
+      title={Instruct-Align: Teaching Novel Languages with to LLMs through Alignment-based Cross-Lingual Instruction}, 
+      author={Samuel Cahyawijaya and Holy Lovenia and Tiezheng Yu and Willy Chung and Pascale Fung},
+      year={2023},
+      eprint={2305.13627},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
 }
 ```
 
@@ -67,4 +54,4 @@ If you use the dataset from this work (i.e., NusaX, NusaMenulis, etc) please als
 - notebooks &rarr; contains all notebooks used for analysis
 
 ### License
-Instruct-Align is licensed under the Apache 2.0 license, as found in the [LICENSE](LICENSE) file.
+InstructAlign is licensed under the Apache 2.0 license, as found in the [LICENSE](LICENSE) file.
