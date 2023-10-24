@@ -144,7 +144,7 @@ def load_rehearsal_dataset(n_samples=1000, random_seed=42):
     # return datasets.concatenate_datasets([sample_en_dset, sample_id_dset])
     return sample_en_dset
 
-def load_flores_datasets(pivot_langs=['eng_Latn'], augmentation='multilingual'):
+def load_flores_datasets(pivot_langs=['eng_Latn'], augmentation='multilingual', num_train_ratio=1.0):
     def inject_lang(row, lang1, lang2):
         row['lang1'] = lang_map[lang1]
         row['lang2'] = lang_map[lang2]
@@ -181,7 +181,11 @@ def load_flores_datasets(pivot_langs=['eng_Latn'], augmentation='multilingual'):
     dset_subsets = []
     for key in dsets.keys():
         for split in ['dev', 'devtest']:
-            dset_subsets.append(dsets[key][split])
+            if 0 < num_train_ratio < 1:
+                dset_subsets.append(dsets[key][split].train_test_split(test_size=num_train_ratio, seed=0)['test'])
+            else:
+                dset_subsets.append(dsets[key][split])
+                
     combined_dset = datasets.concatenate_datasets(dset_subsets)
 
     return combined_dset.train_test_split(test_size=1000, seed=0)

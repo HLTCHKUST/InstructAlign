@@ -172,6 +172,12 @@ class DataTrainingArguments:
             "help": "Mode for data  (monolingual / translation / bilingual / random)."
         },
     )
+    num_train_ratio: float = field(
+        default=1.0,
+        metadata={
+            "help": "Number of samples to be taken from FLORES"
+        },
+    )
 
 def main():
     # See all possible arguments in src/transformers/training_args.py
@@ -230,9 +236,14 @@ def main():
     set_seed(training_args.seed)
 
     # Load the datasets
-    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn'], augmentation=data_args.augmentation_type)
+    raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn'], augmentation=data_args.augmentation_type, num_train_ratio=data_args.num_train_ratio)
     # raw_datasets = load_flores_datasets(pivot_langs=['eng_Latn', 'ind_Latn'], augmentation=data_args.augmentation_type)
 
+    print('=============')
+    print('raw_datasets')
+    print(raw_datasets)
+    print('=============')
+    
     # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
     # https://huggingface.co/docs/datasets/loading_datasets.html.
     config = AutoConfig.from_pretrained(
@@ -304,6 +315,9 @@ def main():
             augmentation_type = random.choice(['translation', 'bilingual', 'xss'])
         elif augmentation_type == 'bilingual-xss':
             augmentation_type = random.choice(['bilingual', 'xss'])
+        else:
+            augmentation_types = augmentation_type.split(',')
+            augmentation_type = random.choice(augmentation_types)
             
         if augmentation_type == 'monolingual':
             rand_proba = random.random()            

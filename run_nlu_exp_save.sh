@@ -89,4 +89,21 @@
 # wait
 # wait
 
-bash run_nlu_prompt.sh ./save/monolingual/monolingual-bloomz-560m_R-100000 2
+# bash run_nlu_prompt.sh ./save/monolingual/monolingual-bloomz-560m_R-100000 2
+# bash run_nlu_prompt.sh ./save/translation/translation-bloomz-560m_R-100000 3
+
+
+# bash run_nlu_prompt.sh ./save/multi/mlm-mt-bloomz-560m 3 &
+# bash run_nlu_prompt.sh ./save/multi/mlm-tlm-bloomz-560m 3 &
+# bash run_nlu_prompt.sh ./save/multi/mlm-xss-bloomz-560m 4 &
+# bash run_nlu_prompt.sh ./save/multi/tlm-xss-mt-bloomz-560m 4 &
+# bash run_nlu_prompt.sh ./save/multi/xss-mt-bloomz-560m 5 &
+# bash run_nlu_prompt.sh ./save/multi/tlm-xss-mt-bloomz-560m-S-150k 5
+
+bash run_nlu_prompt.sh ./save/multi/tlm-mt-bloomz-560m 3 &
+bash run_nlu_prompt.sh ./save/multi/mlm-tlm-mt-bloomz-560m 3 &
+bash run_nlu_prompt.sh ./save/multi/mlm-tlm-xss-bloomz-560m 4 &
+bash run_nlu_prompt.sh ./save/multi/tlm-bloomz-560m 4 &
+bash run_nlu_prompt.sh ./save/multi/new-xss-bloomz-560m 5 &
+bash run_nlu_prompt.sh ./save/multi/new-mlm-bloomz-560m 5 &
+bash run_nlu_prompt.sh ./save/multi/new-mt-bloomz-560m 6 &
