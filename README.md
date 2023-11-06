@@ -7,7 +7,7 @@ This work is part of a series of work on LM adaptability to underrepresented & l
 Our paper has been accepted in SEALP workshop in AACL 2023. In the meantime, if you use the existing resource, please consider citing:
 ```
 @misc{cahyawijaya2023instructalign,
-      title={Instruct-Align: Teaching Novel Languages with to LLMs through Alignment-based Cross-Lingual Instruction}, 
+      title={InstructAlign: High-and-Low Resource Language Alignment via Continual Crosslingual Instruction Tuning}, 
       author={Samuel Cahyawijaya and Holy Lovenia and Tiezheng Yu and Willy Chung and Pascale Fung},
       year={2023},
       eprint={2305.13627},
