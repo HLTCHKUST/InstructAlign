@@ -437,7 +437,6 @@ def main():
             ):
             if inputs is None:
                 # Build Prompt
-                input_data = []
                 input_data.append(self_prompt(sent1, sent2, lang1, lang2, augmentation_type, is_encoder_decoder))
             else:
                 # Use xP3 Prompt data
